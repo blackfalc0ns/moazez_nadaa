@@ -66,7 +66,7 @@ class CallsHistoryFiltersPanel extends StatelessWidget {
                   ),
                 ),
               ),
-              TextButton(onPressed: onReset, child:  Text('مسح' , style: AppTypography.bodyMedium,)),
+              TextButton(onPressed: onReset, child:  Text('مسح' , style: AppTypography.bodyMedium, )),
             ],
           ),
           AppSpacing.verticalSpaceSm,
