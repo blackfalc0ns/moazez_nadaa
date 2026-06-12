@@ -1,0 +1,173 @@
+import 'models/calls_history_record.dart';
+import 'models/pickup_request.dart';
+
+class CallsHistoryDummyData {
+  const CallsHistoryDummyData._();
+
+  static final today = DateTime(2026, 6, 12);
+
+  static const stages = ['الكل', 'حضانة', 'تمهيدي', 'ابتدائي', 'متوسط'];
+
+  static const grades = [
+    'الكل',
+    'KG 1',
+    'KG 2',
+    'تمهيدي',
+    'الصف الأول',
+    'الصف الرابع',
+    'الصف السادس',
+    'الصف الأول متوسط',
+  ];
+
+  static const sections = ['الكل', 'أ', 'ب', 'ج', 'د', 'زهور', 'نجوم'];
+
+  static const gates = [
+    'الكل',
+    'البوابة الرئيسية',
+    'بوابة الحضانة',
+    'بوابة البنات',
+    'بوابة الروضة',
+    'بوابة رقم 2',
+  ];
+
+  static final records = [
+    CallsHistoryRecord(
+      date: DateTime(2026, 6, 12),
+      durationLabel: 'تم خلال 7 د',
+      request: const PickupRequest(
+        id: 'REQ-1038',
+        studentName: 'فهد ناصر',
+        guardianName: 'ناصر صالح',
+        guardianRelation: 'الأب',
+        grade: 'الصف الأول متوسط',
+        section: 'د',
+        stage: 'متوسط',
+        campus: 'المبنى المتوسط',
+        gate: 'بوابة رقم 2',
+        requestedAt: '10:18 ص',
+        status: PickupStatus.delivered,
+        priority: PickupPriority.normal,
+        waitingMinutes: 7,
+        guardianPhone: '054 300 1010',
+        pickupCode: '7712',
+        note: 'تم التسليم بعد مطابقة الكود.',
+        assignedTo: 'أمن البوابة 2',
+      ),
+    ),
+    CallsHistoryRecord(
+      date: DateTime(2026, 6, 12),
+      durationLabel: 'تأخر 19 د',
+      request: const PickupRequest(
+        id: 'REQ-1039',
+        studentName: 'ريان ماجد',
+        guardianName: 'نورة علي',
+        guardianRelation: 'الأم',
+        grade: 'تمهيدي',
+        section: 'ب',
+        stage: 'تمهيدي',
+        campus: 'مبنى الروضة',
+        gate: 'بوابة الروضة',
+        requestedAt: '10:24 ص',
+        status: PickupStatus.delayed,
+        priority: PickupPriority.urgent,
+        waitingMinutes: 19,
+        guardianPhone: '056 442 9900',
+        pickupCode: '2088',
+        note: 'الطالب في نشاط داخلي ويحتاج متابعة من المشرفة.',
+        assignedTo: 'مشرفة الروضة',
+      ),
+    ),
+    CallsHistoryRecord(
+      date: DateTime(2026, 6, 11),
+      durationLabel: 'تم خلال 5 د',
+      request: const PickupRequest(
+        id: 'REQ-1028',
+        studentName: 'جود سامي',
+        guardianName: 'سامي فهد',
+        guardianRelation: 'الأب',
+        grade: 'الصف السادس',
+        section: 'ج',
+        stage: 'ابتدائي',
+        campus: 'مبنى البنات',
+        gate: 'بوابة البنات',
+        requestedAt: '1:15 م',
+        status: PickupStatus.delivered,
+        priority: PickupPriority.normal,
+        waitingMinutes: 5,
+        guardianPhone: '053 884 2120',
+        pickupCode: '5570',
+        note: 'تم التحقق من هوية ولي الأمر.',
+        assignedTo: 'مشرفة البوابة',
+      ),
+    ),
+    CallsHistoryRecord(
+      date: DateTime(2026, 6, 11),
+      durationLabel: 'تم خلال 11 د',
+      request: const PickupRequest(
+        id: 'REQ-1026',
+        studentName: 'لينا خالد',
+        guardianName: 'خالد عبدالله',
+        guardianRelation: 'الأب',
+        grade: 'KG 2',
+        section: 'زهور',
+        stage: 'حضانة',
+        campus: 'مبنى الحضانة',
+        gate: 'بوابة الحضانة',
+        requestedAt: '12:44 م',
+        status: PickupStatus.delivered,
+        priority: PickupPriority.normal,
+        waitingMinutes: 11,
+        guardianPhone: '055 771 2201',
+        pickupCode: '9134',
+        note: 'التسليم من بوابة الحضانة فقط.',
+        assignedTo: 'مشرفة الحضانة',
+      ),
+    ),
+    CallsHistoryRecord(
+      date: DateTime(2026, 6, 9),
+      durationLabel: 'تأخر 23 د',
+      request: const PickupRequest(
+        id: 'REQ-1019',
+        studentName: 'سلمان أحمد',
+        guardianName: 'أحمد محمد',
+        guardianRelation: 'الأب',
+        grade: 'الصف الرابع',
+        section: 'أ',
+        stage: 'ابتدائي',
+        campus: 'مبنى البنين',
+        gate: 'البوابة الرئيسية',
+        requestedAt: '11:06 ص',
+        status: PickupStatus.delayed,
+        priority: PickupPriority.urgent,
+        waitingMinutes: 23,
+        guardianPhone: '050 123 4499',
+        pickupCode: '4821',
+        note: 'ولي الأمر ينتظر في المسار السريع.',
+        assignedTo: 'مشرف الدور الأول',
+      ),
+    ),
+    CallsHistoryRecord(
+      date: DateTime(2026, 6, 4),
+      durationLabel: 'تم خلال 6 د',
+      request: const PickupRequest(
+        id: 'REQ-1007',
+        studentName: 'مريم وليد',
+        guardianName: 'وليد حامد',
+        guardianRelation: 'الأب',
+        grade: 'KG 1',
+        section: 'نجوم',
+        stage: 'حضانة',
+        campus: 'مبنى الحضانة',
+        gate: 'بوابة الحضانة',
+        requestedAt: '12:10 م',
+        status: PickupStatus.delivered,
+        priority: PickupPriority.normal,
+        waitingMinutes: 6,
+        guardianPhone: '055 112 3434',
+        pickupCode: '6640',
+        note: 'تم التسليم للمخول المسجل.',
+        assignedTo: 'مشرفة الحضانة',
+      ),
+    ),
+  ];
+}
