@@ -1,146 +1,158 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../core/constants/app_assets.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../../core/permissions/app_permission.dart';
+import '../../../../core/permissions/permission_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_shadows.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/helper/on_genrated_routes.dart';
+import '../../../../core/utils/navigation/custom_bottom_nav_bar.dart';
+import '../../../../generated/app_localizations.dart';
+import '../../../auth/data/repositories/dismissal_auth_repo.dart';
 
 class AppSideDrawer extends StatelessWidget {
   const AppSideDrawer({
     super.key,
-    required this.selectedIndex,
+    required this.selectedTarget,
+    required this.availableTargets,
     required this.onTabSelected,
   });
 
-  final int selectedIndex;
-  final ValueChanged<int> onTabSelected;
+  final DismissalNavigationTarget selectedTarget;
+  final List<DismissalNavigationTarget> availableTargets;
+  final ValueChanged<DismissalNavigationTarget> onTabSelected;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final permissions = sl<PermissionRepository>();
     final screenWidth = MediaQuery.sizeOf(context).width;
 
     return Drawer(
-      width: screenWidth > 420 ? 292 : screenWidth * 0.65,
+      width: screenWidth > 420 ? 304 : screenWidth * 0.76,
       backgroundColor: Colors.transparent,
       elevation: 0,
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          height: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.92),
+            color: Colors.white.withValues(alpha: 0.94),
             border: BorderDirectional(
               end: BorderSide(
-                color: Colors.white.withValues(alpha: 0.45),
+                color: Colors.white.withValues(alpha: 0.55),
                 width: 1.2,
               ),
             ),
             boxShadow: AppShadows.xl,
           ),
-          child: ListView(
-            padding: EdgeInsets.only(
-              top: MediaQuery.paddingOf(context).top + AppSpacing.md,
-              bottom: AppSpacing.lg,
-            ),
+          child: Column(
             children: [
-              _DrawerSection(
-                title: 'العمل اليومي',
-                children: [
-                  _DrawerItem(
-                    icon: Iconsax.direct_notification,
-                    title: 'لوحة النداء',
-                    subtitle: 'طلبات الاستلام النشطة',
-                    selected: selectedIndex == 0,
-                    onTap: () => _selectTab(context, 0),
+              _DrawerHeader(l10n: l10n),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.sm,
                   ),
-                  _DrawerItem(
-                    icon: Iconsax.message_text,
-                    title: 'الشات',
-                    subtitle: 'رسائل المدرسة وأولياء الأمور',
-                    selected: selectedIndex == 1,
-                    onTap: () => _selectTab(context, 1),
-                  ),
-                  _DrawerItem(
-                    icon: Iconsax.receipt_search,
-                    title: 'سجل النداءات',
-                    subtitle: 'الطلبات المكتملة والمتأخرة',
-                    onTap: () => _openRoute(context, Routes.callsHistory),
-                  ),
-                  _DrawerItem(
-                    icon: Iconsax.location_tick,
-                    title: 'البوابات والمناوبات',
-                    subtitle: 'نقاط التسليم والمشرفين',
-                    onTap: () => _openRoute(context, Routes.gatesDuties),
-                  ),
-                  _DrawerItem(
-                    icon: Iconsax.profile_2user,
-                    title: 'الطلاب المنتظرون',
-                    subtitle: 'لم يتم تسليمهم بعد',
-                    badge: '3',
-                    onTap: () => _openRoute(context, Routes.waitingStudents),
-                  ),
-                ],
+                  children: [
+                    _SectionLabel(l10n.drawerDailyWork),
+                    if (_hasTarget(DismissalNavigationTarget.calls))
+                      _DrawerItem(
+                        icon: Iconsax.direct_notification,
+                        title: l10n.drawerCallsBoard,
+                        subtitle: l10n.drawerCallsBoardSubtitle,
+                        selected:
+                            selectedTarget == DismissalNavigationTarget.calls,
+                        onTap: () => _selectTab(
+                          context,
+                          DismissalNavigationTarget.calls,
+                        ),
+                      ),
+                    if (_hasTarget(DismissalNavigationTarget.waiting))
+                      _DrawerItem(
+                        icon: Iconsax.profile_2user,
+                        title: l10n.drawerWaiting,
+                        subtitle: l10n.drawerWaitingSubtitle,
+                        selected:
+                            selectedTarget == DismissalNavigationTarget.waiting,
+                        onTap: () => _selectTab(
+                          context,
+                          DismissalNavigationTarget.waiting,
+                        ),
+                      ),
+                    if (_hasTarget(DismissalNavigationTarget.gates))
+                      _DrawerItem(
+                        icon: Iconsax.location_tick,
+                        title: l10n.drawerGates,
+                        subtitle: l10n.drawerGatesSubtitle,
+                        selected:
+                            selectedTarget == DismissalNavigationTarget.gates,
+                        onTap: () => _selectTab(
+                          context,
+                          DismissalNavigationTarget.gates,
+                        ),
+                      ),
+                    if (permissions.has(AppPermission.viewHistory))
+                      _DrawerItem(
+                        icon: Iconsax.receipt_search,
+                        title: l10n.drawerCallsHistory,
+                        subtitle: l10n.drawerCallsHistorySubtitle,
+                        onTap: () => _openRoute(context, Routes.callsHistory),
+                      ),
+                    const _SectionDivider(),
+                    _SectionLabel(l10n.drawerAccountSafety),
+                    if (permissions.has(AppPermission.viewProfile))
+                      _DrawerItem(
+                        icon: Iconsax.user_octagon,
+                        title: l10n.drawerProfile,
+                        subtitle: l10n.drawerProfileSubtitle,
+                        onTap: () => _openRoute(context, Routes.profile),
+                      ),
+                    if (permissions.has(AppPermission.viewNotifications))
+                      _DrawerItem(
+                        icon: Iconsax.notification_status,
+                        title: l10n.drawerNotifications,
+                        subtitle: l10n.drawerNotificationsSubtitle,
+                        onTap: () => _openRoute(context, Routes.notifications),
+                      ),
+                    _DrawerItem(
+                      icon: Iconsax.setting_2,
+                      title: l10n.drawerSettings,
+                      subtitle: l10n.drawerSettingsSubtitle,
+                      onTap: () => _openRoute(context, Routes.settings),
+                    ),
+                    const _SectionDivider(),
+                    _SectionLabel(l10n.drawerSupportLegal),
+                    _DrawerItem(
+                      icon: Iconsax.message_question,
+                      title: l10n.drawerHelp,
+                      subtitle: l10n.drawerHelpSubtitle,
+                      onTap: () => Navigator.pop(context),
+                    ),
+                    _DrawerItem(
+                      icon: Iconsax.document_text,
+                      title: l10n.drawerTerms,
+                      subtitle: l10n.drawerTermsSubtitle,
+                      onTap: () => Navigator.pop(context),
+                    ),
+                    _DrawerItem(
+                      icon: Iconsax.lock_1,
+                      title: l10n.drawerPrivacy,
+                      subtitle: l10n.drawerPrivacySubtitle,
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
               ),
-              _DrawerSection(
-                title: 'الحساب والسلامة',
-                children: [
-                  _DrawerItem(
-                    icon: Iconsax.user_octagon,
-                    title: 'الملف الشخصي',
-                    subtitle: 'بيانات المشرف والصلاحيات',
-                    onTap: () => _openRoute(context, Routes.profile),
-                  ),
-                  // _DrawerItem(
-                  //   icon: Iconsax.shield_tick,
-                  //   title: 'أولياء الأمور المعتمدون',
-                  //   subtitle: 'تحقق من هوية المستلم',
-                  //   onTap: () =>
-                  //       _openRoute(context, Routes.authorizedGuardians),
-                  // ),
-                  _DrawerItem(
-                    icon: Iconsax.notification_status,
-                    title: 'التنبيهات',
-                    subtitle: 'طلبات عاجلة وتأخيرات',
-                    badge: '5',
-                    onTap: () => _openRoute(context, Routes.notifications),
-                  ),
-                  _DrawerItem(
-                    icon: Iconsax.setting_2,
-                    title: 'الإعدادات',
-                    subtitle: 'الصوت واللغة والإشعارات',
-                    onTap: () => _openRoute(context, Routes.settings),
-                  ),
-                ],
-              ),
-              _DrawerSection(
-                title: 'الدعم والقوانين',
-                children: [
-                  _DrawerItem(
-                    icon: Iconsax.message_question,
-                    title: 'المساعدة والدعم',
-                    subtitle: 'تواصل مع دعم معزز',
-                    onTap: () => _close(context),
-                  ),
-                  _DrawerItem(
-                    icon: Iconsax.document_text,
-                    title: 'الشروط والأحكام',
-                    subtitle: 'قواعد استخدام التطبيق',
-                    onTap: () => _close(context),
-                  ),
-                  _DrawerItem(
-                    icon: Iconsax.lock_1,
-                    title: 'سياسة الخصوصية',
-                    subtitle: 'حماية بيانات الطلاب',
-                    onTap: () => _close(context),
-                  ),
-                ],
-              ),
-              const _DrawerFooter(),
+              _DrawerFooter(l10n: l10n),
             ],
           ),
         ),
@@ -148,53 +160,96 @@ class AppSideDrawer extends StatelessWidget {
     );
   }
 
-  void _selectTab(BuildContext context, int index) {
-    Navigator.of(context).pop();
-    onTabSelected(index);
+  bool _hasTarget(DismissalNavigationTarget target) {
+    return availableTargets.contains(target);
   }
 
-  void _close(BuildContext context) {
-    Navigator.of(context).pop();
+  void _selectTab(BuildContext context, DismissalNavigationTarget target) {
+    Navigator.pop(context);
+    onTabSelected(target);
   }
 
   void _openRoute(BuildContext context, String routeName) {
-    Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(routeName);
+    Navigator.pop(context);
+    Navigator.pushNamed(context, routeName);
   }
 }
 
-class _DrawerSection extends StatelessWidget {
-  const _DrawerSection({required this.title, required this.children});
+class _DrawerHeader extends StatelessWidget {
+  const _DrawerHeader({required this.l10n});
 
-  final String title;
-  final List<Widget> children;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(
+        20,
+        MediaQuery.paddingOf(context).top + 18,
+        20,
+        20,
+      ),
+      decoration: const BoxDecoration(
+        gradient: AppColors.primaryGradient,
+        borderRadius: BorderRadiusDirectional.only(
+          bottomEnd: Radius.circular(28),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: SvgPicture.asset(
+              AppAssets.logo,
+              height: 34,
+              alignment: AlignmentDirectional.centerStart,
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.white.withValues(alpha: 0.14),
+            ),
+            icon: const Icon(Icons.close_rounded, color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
+      padding: const EdgeInsetsDirectional.fromSTEB(8, 10, 8, 8),
+      child: Text(
+        text,
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.textSecondaryLight,
+          fontWeight: FontWeight.w900,
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.only(
-              start: AppSpacing.sm,
-              bottom: AppSpacing.xxs,
-            ),
-            child: Text(
-              title,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.textSecondaryLight,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
-          ...children,
-        ],
-      ),
+    );
+  }
+}
+
+class _SectionDivider extends StatelessWidget {
+  const _SectionDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      height: 28,
+      color: AppColors.primary.withValues(alpha: 0.08),
     );
   }
 }
@@ -206,7 +261,6 @@ class _DrawerItem extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     this.selected = false,
-    this.badge,
   });
 
   final IconData icon;
@@ -214,12 +268,10 @@ class _DrawerItem extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
   final bool selected;
-  final String? badge;
 
   @override
   Widget build(BuildContext context) {
     final color = selected ? AppColors.primary : AppColors.primaryDeep;
-
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: Material(
@@ -233,17 +285,17 @@ class _DrawerItem extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.sm,
-              vertical: AppSpacing.xs,
+              vertical: 10,
             ),
             child: Row(
               children: [
                 Container(
-                  width: 34,
-                  height: 34,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    color: selected
-                        ? AppColors.primary.withValues(alpha: 0.14)
-                        : AppColors.primary.withValues(alpha: 0.07),
+                    color: AppColors.primary.withValues(
+                      alpha: selected ? 0.14 : 0.07,
+                    ),
                     borderRadius: AppRadius.all(AppRadius.radius3),
                   ),
                   child: Icon(icon, color: color, size: 19),
@@ -255,14 +307,11 @@ class _DrawerItem extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                         style: AppTypography.bodyMedium.copyWith(
                           color: color,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
-                      const SizedBox(height: 1),
                       Text(
                         subtitle,
                         maxLines: 1,
@@ -275,28 +324,6 @@ class _DrawerItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (badge != null) ...[
-                  AppSpacing.horizontalSpaceSm,
-                  Container(
-                    height: 21,
-                    alignment: Alignment.center,
-                    constraints: const BoxConstraints(minWidth: 21),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xs,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.error.withValues(alpha: 0.1),
-                      borderRadius: AppRadius.all(AppRadius.radiusFull),
-                    ),
-                    child: Text(
-                      badge!,
-                      style: AppTypography.caption.copyWith(
-                        color: AppColors.error,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
@@ -307,40 +334,50 @@ class _DrawerItem extends StatelessWidget {
 }
 
 class _DrawerFooter extends StatelessWidget {
-  const _DrawerFooter();
+  const _DrawerFooter({required this.l10n});
+
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.sm,
-        AppSpacing.xs,
-        AppSpacing.sm,
-        AppSpacing.md,
-      ),
-      child: Material(
-        color: AppColors.error.withValues(alpha: 0.08),
-        borderRadius: AppRadius.all(AppRadius.radius3),
-        child: InkWell(
-          onTap: () => Navigator.of(context).pop(),
-          borderRadius: AppRadius.all(AppRadius.radius5),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
-              vertical: AppSpacing.sm,
-            ),
-            child: Row(
-              children: [
-                const Icon(Iconsax.logout_1, color: AppColors.error, size: 21),
-                AppSpacing.horizontalSpaceMd,
-                Text(
-                  'تسجيل الخروج',
-                  style: AppTypography.bodyMedium.copyWith(
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        child: Material(
+          color: AppColors.error.withValues(alpha: 0.08),
+          borderRadius: AppRadius.all(AppRadius.radius3),
+          child: InkWell(
+            onTap: () async {
+              Navigator.pop(context);
+              await sl<DismissalAuthRepo>().logout();
+              if (!context.mounted) return;
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.login,
+                (route) => false,
+              );
+            },
+            borderRadius: AppRadius.all(AppRadius.radius3),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              child: Row(
+                children: [
+                  const Icon(
+                    Iconsax.logout_1,
                     color: AppColors.error,
-                    fontWeight: FontWeight.w900,
+                    size: 21,
                   ),
-                ),
-              ],
+                  AppSpacing.horizontalSpaceMd,
+                  Text(
+                    l10n.drawerLogout,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColors.error,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

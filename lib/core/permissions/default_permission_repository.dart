@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/storage_keys.dart';
@@ -7,37 +8,52 @@ import 'app_permission.dart';
 import 'permission_repository.dart';
 
 class DefaultPermissionRepository implements PermissionRepository {
-  static const _kPermissionCache = 'granted_permissions';
+  static const _permissionCacheKey = 'granted_permissions';
+  static const _accessTokenKey = 'access_token';
+
+  DefaultPermissionRepository({
+    required SharedPreferences prefs,
+    required FlutterSecureStorage secureStorage,
+  }) : _prefs = prefs,
+       _secureStorage = secureStorage;
 
   final SharedPreferences _prefs;
-  Set<AppPermission> _granted = AppPermission.values.toSet();
-
-  DefaultPermissionRepository({required SharedPreferences prefs})
-    : _prefs = prefs;
+  final FlutterSecureStorage _secureStorage;
+  Set<AppPermission> _granted = <AppPermission>{};
 
   @override
   Future<void> warmup() async {
-    final cached = _prefs.getStringList(_kPermissionCache);
-    if (cached != null && cached.isNotEmpty) {
-      _granted = cached
-          .map(_parsePermission)
-          .whereType<AppPermission>()
-          .toSet();
+    final token = await _secureStorage.read(key: _accessTokenKey);
+    if (token == null || token.isEmpty) {
+      await clear();
+      return;
+    }
+
+    final tokenPayload = _decodeJwtPayload(token);
+    final tokenPermissions = _permissionKeysFrom(tokenPayload);
+    if (tokenPermissions.isNotEmpty) {
+      await updateFromPermissionKeys(tokenPermissions);
       return;
     }
 
     final rawUser = _prefs.getString(StorageKeys.userData);
-    if (rawUser == null || rawUser.isEmpty) return;
-
-    try {
-      final json = jsonDecode(rawUser) as Map<String, dynamic>;
-      final permissions = json['permissions'];
-      if (permissions is List) {
-        await updateFromPermissionKeys(permissions.whereType<String>());
-      }
-    } catch (_) {
-      // Keep the permissive default until auth and user models are wired.
+    if (rawUser != null && rawUser.isNotEmpty) {
+      try {
+        final user = Map<String, dynamic>.from(jsonDecode(rawUser) as Map);
+        final userPermissions = _permissionKeysFrom(user);
+        if (userPermissions.isNotEmpty) {
+          await updateFromPermissionKeys(userPermissions);
+          return;
+        }
+      } catch (_) {}
     }
+
+    if (_isDismissalStaff(tokenPayload)) {
+      await updateFromPermissionKeys(_dismissalStaffPermissionKeys);
+      return;
+    }
+
+    await clear();
   }
 
   @override
@@ -54,30 +70,94 @@ class DefaultPermissionRepository implements PermissionRepository {
   }
 
   @override
-  Set<AppPermission> grantedPermissions() => Set<AppPermission>.from(_granted);
+  Set<AppPermission> grantedPermissions() => Set.of(_granted);
 
   @override
   Future<void> updateFromPermissionKeys(Iterable<String> permissions) async {
-    final resolved = permissions
-        .map(_parsePermission)
+    _granted = permissions
+        .map((key) => _apiToEnum[key.trim()])
         .whereType<AppPermission>()
         .toSet();
-    _granted = resolved.isEmpty ? AppPermission.values.toSet() : resolved;
     await _prefs.setStringList(
-      _kPermissionCache,
+      _permissionCacheKey,
       _granted.map((permission) => permission.key).toList(growable: false),
     );
   }
 
   @override
   Future<void> clear() async {
-    _granted = AppPermission.values.toSet();
-    await _prefs.remove(_kPermissionCache);
+    _granted = <AppPermission>{};
+    await _prefs.remove(_permissionCacheKey);
   }
 
-  AppPermission? _parsePermission(String key) => _apiToEnum[key];
+  Map<String, dynamic> _decodeJwtPayload(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return const {};
+      final raw = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+      final decoded = jsonDecode(raw);
+      return decoded is Map
+          ? Map<String, dynamic>.from(decoded)
+          : const <String, dynamic>{};
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  Set<String> _permissionKeysFrom(Map<String, dynamic> source) {
+    final result = <String>{};
+
+    void collect(dynamic value) {
+      if (value is String && value.contains('.')) {
+        result.add(value.trim());
+        return;
+      }
+      if (value is List) {
+        for (final item in value) {
+          collect(item);
+        }
+        return;
+      }
+      if (value is Map) {
+        final map = Map<String, dynamic>.from(value);
+        for (final key in const [
+          'key',
+          'code',
+          'name',
+          'permission',
+          'value',
+          'permissions',
+          'activeMembership',
+          'role',
+          'user',
+        ]) {
+          if (map.containsKey(key)) collect(map[key]);
+        }
+      }
+    }
+
+    collect(source);
+    return result;
+  }
+
+  bool _isDismissalStaff(Map<String, dynamic> payload) {
+    final candidates = [
+      payload['userType'],
+      payload['user_type'],
+      payload['type'],
+      payload['role'],
+      payload['roleName'],
+    ];
+    return candidates.any(
+      (value) => value?.toString().trim().toUpperCase() == 'DISMISSAL_STAFF',
+    );
+  }
 
   static final Map<String, AppPermission> _apiToEnum = {
     for (final permission in AppPermission.values) permission.key: permission,
+  };
+
+  static final Set<String> _dismissalStaffPermissionKeys = {
+    for (final permission in AppPermission.values) permission.key,
   };
 }

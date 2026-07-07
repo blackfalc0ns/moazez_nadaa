@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../generated/app_localizations.dart';
 
 class CallsHeader extends StatelessWidget {
   const CallsHeader({
@@ -18,6 +19,7 @@ class CallsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       height: 160,
       child: Stack(
@@ -65,14 +67,14 @@ class CallsHeader extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'النداء',
+                              l10n.calls,
                               style: AppTypography.heading4.copyWith(
                                 color: AppColors.white,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             Text(
-                              'طلبات خروج الطلاب الآن',
+                              l10n.dismissalCallsSubtitle,
                               style: AppTypography.caption.copyWith(
                                 color: AppColors.white.withValues(alpha: 0.76),
                                 fontWeight: FontWeight.w600,
@@ -87,9 +89,15 @@ class CallsHeader extends StatelessWidget {
                   SizedBox(height: AppSpacing.lg),
                   Row(
                     children: [
-                      _HeaderMetric(label: 'نشط', value: '$activeCount'),
+                      _HeaderMetric(
+                        label: l10n.dismissalActive,
+                        value: '$activeCount',
+                      ),
                       AppSpacing.horizontalSpaceMd,
-                      _HeaderMetric(label: 'عاجل', value: '$urgentCount'),
+                      _HeaderMetric(
+                        label: l10n.dismissalUrgent,
+                        value: '$urgentCount',
+                      ),
                     ],
                   ),
                 ],
@@ -134,6 +142,7 @@ class _LiveBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
@@ -150,7 +159,7 @@ class _LiveBadge extends StatelessWidget {
           const Icon(Iconsax.timer_start, color: AppColors.white, size: 15),
           AppSpacing.horizontalSpaceXs,
           Text(
-            '$count مباشر',
+            l10n.dismissalLiveCount(count),
             style: AppTypography.caption.copyWith(
               color: AppColors.white,
               fontWeight: FontWeight.w800,

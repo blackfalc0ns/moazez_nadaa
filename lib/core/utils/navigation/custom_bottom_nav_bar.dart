@@ -1,43 +1,48 @@
 import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:ndaaa_chat/core/theme/app_colors.dart';
-import 'package:ndaaa_chat/core/theme/app_typography.dart';
 
-import '../../../generated/app_localizations.dart';
+import 'package:flutter/material.dart';
+
+import '../../theme/app_colors.dart';
+import '../../theme/app_typography.dart';
+
+enum DismissalNavigationTarget { calls, waiting, gates }
+
+class DismissalBottomNavItem {
+  const DismissalBottomNavItem({
+    required this.target,
+    required this.label,
+    required this.icon,
+  });
+
+  final DismissalNavigationTarget target;
+  final String label;
+  final IconData icon;
+}
 
 class CustomBottomNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final Function(int) onTap;
-
   const CustomBottomNavBar({
     super.key,
     required this.selectedIndex,
+    required this.items,
     required this.onTap,
   });
 
+  final int selectedIndex;
+  final List<DismissalBottomNavItem> items;
+  final ValueChanged<int> onTap;
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) return const SizedBox.shrink();
-
-    // The items list based on user request: Home, Children, Homeworks, Progress, Messages
-    final items = [
-      _BottomNavItemData(label: l10n.calls, icon: Iconsax.direct_notification),
-      _BottomNavItemData(label: l10n.messages, icon: Iconsax.message_text),
-    ];
+    if (items.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      // We use Padding instead of margin to handle the bottom navigation bar slot better
       padding: EdgeInsets.fromLTRB(
         16,
         0,
         16,
-        MediaQuery.of(context).padding.bottom + 12,
+        MediaQuery.paddingOf(context).bottom + 12,
       ),
-      decoration: const BoxDecoration(
-        color: Colors.transparent, // Ensure the bar area itself is transparent
-      ),
+      color: Colors.transparent,
       child: Container(
         height: 65,
         decoration: BoxDecoration(
@@ -54,31 +59,28 @@ class CustomBottomNavBar extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: 3,
-              sigmaY: 3,
-            ), // Higher blur for better glassy look
+            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                // Use a very light white with alpha for the frosted glass effect
-                color: Colors.white.withValues(alpha: 0.6),
+                color: Colors.white.withValues(alpha: 0.78),
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: Colors.white.withValues(alpha: 0.45),
                   width: 1.5,
                 ),
               ),
               child: Row(
-                children: List.generate(items.length, (index) {
-                  return Expanded(
-                    child: _buildNavItem(
-                      index: index,
-                      icon: items[index].icon,
-                      label: items[index].label,
+                children: List.generate(
+                  items.length,
+                  (index) => Expanded(
+                    child: _NavItem(
+                      item: items[index],
+                      selected: selectedIndex == index,
+                      onTap: () => onTap(index),
                     ),
-                  );
-                }),
+                  ),
+                ),
               ),
             ),
           ),
@@ -86,53 +88,54 @@ class CustomBottomNavBar extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildNavItem({
-    required int index,
-    required IconData icon,
-    required String label,
-  }) {
-    final bool isSelected = selectedIndex == index;
-    return GestureDetector(
-      onTap: () => onTap(index),
-      behavior: HitTestBehavior.opaque,
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.item,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final DismissalBottomNavItem item;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(22),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 260),
+            curve: Curves.easeOutCubic,
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isSelected
+              color: selected
                   ? AppColors.primary.withValues(alpha: 0.15)
                   : Colors.transparent,
               shape: BoxShape.circle,
             ),
             child: Icon(
-              icon,
-              color: isSelected ? AppColors.primary : const Color(0xFF676767),
-              size: 24,
+              item.icon,
+              color: selected ? AppColors.primary : const Color(0xFF676767),
+              size: 23,
             ),
           ),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              label,
-              style: AppTypography.labelSmall.copyWith(
-                color: isSelected ? AppColors.primary : const Color(0xFF676767),
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
+          Text(
+            item.label,
+            style: AppTypography.labelSmall.copyWith(
+              color: selected ? AppColors.primary : const Color(0xFF676767),
+              fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
     );
   }
-}
-
-class _BottomNavItemData {
-  final String label;
-  final IconData icon;
-  _BottomNavItemData({required this.label, required this.icon});
 }

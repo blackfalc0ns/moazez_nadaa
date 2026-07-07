@@ -4,13 +4,13 @@ class AppConstants {
   AppConstants._();
 
   // App Info
-  static const String appName = 'Teacher App';
-  static const String appNameAr = 'تطبيق المعلم';
+  static const String appName = 'Moazez Dismissal';
+  static const String appNameAr = 'نداء معزز';
   static const String appVersion = '1.0.0';
   static const int appBuildNumber = 1;
 
   // API
-  static const String apiBaseUrl = 'https://api.teacher-app.com/v1';
+  static const String apiBaseUrl = 'https://api.moazez.sa/api/v1';
   static const int apiTimeout = 30000;
   static const int maxRetries = 3;
 
@@ -61,6 +61,7 @@ class AppConstants {
 
   // Notifications
   static const String notificationChannelId = 'ndaaa_chat_notifications';
-  static const String notificationChannelName = 'Teacher App Notifications';
-  static const String notificationChannelDescription = 'Notifications for Teacher App';
+  static const String notificationChannelName = 'Moazez Dismissal';
+  static const String notificationChannelDescription =
+      'Dismissal requests and operational alerts';
 }

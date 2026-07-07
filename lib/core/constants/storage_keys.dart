@@ -5,6 +5,7 @@ class StorageKeys {
 
   // Auth keys
   static const String authToken = 'auth_token';
+  static const String accessToken = 'access_token';
   static const String refreshToken = 'refresh_token';
   static const String tokenExpiry = 'token_expiry';
   static const String userId = 'user_id';
@@ -12,7 +13,6 @@ class StorageKeys {
   // User data keys
   static const String userData = 'user_data';
   static const String userProfile = 'user_profile';
-  static const String teacherId = 'teacher_id';
 
   // Settings keys
   static const String locale = 'app_locale';
@@ -31,7 +31,6 @@ class StorageKeys {
   // Cache keys
   static const String cacheVersion = 'cache_version';
   static const String lastCacheUpdate = 'last_cache_update';
-  static const String cachedClassrooms = 'cached_classrooms';
   static const String cachedSchedule = 'cached_schedule';
 
   // Notification keys
@@ -41,7 +40,6 @@ class StorageKeys {
 
   // Filter and sort keys
   static const String classroomFilters = 'classroom_filters';
-  static const String homeworkFilters = 'homework_filters';
   static const String messageFilters = 'message_filters';
   static const String sortPreference = 'sort_preference';
 

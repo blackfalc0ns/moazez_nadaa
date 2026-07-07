@@ -3,7 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_assets.dart';
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/helper/on_genrated_routes.dart';
+import '../../../auth/data/repositories/dismissal_auth_repo.dart';
 import '../../../onboarding/presentation/pages/onboarding_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -50,10 +52,16 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (!mounted) return;
 
-    Navigator.pushReplacementNamed(
-      context,
-      hasSeenOnboarding ? Routes.root : Routes.onboarding,
-    );
+    final nextRoute = hasSeenOnboarding
+        ? await _authenticatedRoute()
+        : Routes.onboarding;
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, nextRoute);
+  }
+
+  Future<String> _authenticatedRoute() async {
+    final session = await sl<DismissalAuthRepo>().restoreSession();
+    return session == null ? Routes.login : Routes.root;
   }
 
   @override

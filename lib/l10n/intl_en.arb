@@ -76,6 +76,282 @@
   "homeworks": "Homeworks",
   "messages": "Messages",
   "calls": "Calls",
+  "appTitle": "Moazez Dismissal",
+  "authLoginTitle": "Dismissal staff sign in",
+  "authLoginSubtitle": "Use your school-approved staff account to manage dismissal and handover requests.",
+  "authEmailLabel": "Email",
+  "authEmailInvalid": "Enter a valid email address",
+  "authPasswordLabel": "Password",
+  "authPasswordInvalid": "Password must be at least 6 characters",
+  "authLoginButton": "Sign in",
+  "authStaffOnlyHint": "This portal is only for authorized dismissal staff accounts.",
+  "fieldRequired": "This field is required",
+  "onboardingSkip": "Skip",
+  "onboardingDescriptionOne": "Receive guardian calls instantly and track dismissal requests from arrival through safe handover.",
+  "onboardingDescriptionTwo": "Monitor the waiting queue, each request status, and your assigned gate from one clear operations screen.",
+  "onboardingDescriptionThree": "Verify the authorized recipient and pickup code, then complete handover with a reliable operational record.",
+  "settingsHeaderTitle": "Operations settings",
+  "settingsHeaderSubtitle": "Control alerts, duty preferences, and student data privacy.",
+  "settingsNotificationsSound": "Notifications and sound",
+  "settingsDismissalNotifications": "Dismissal notifications",
+  "settingsDismissalNotificationsSubtitle": "Receive urgent requests and delay alerts",
+  "settingsUrgentSound": "Urgent request sound",
+  "settingsUrgentSoundSubtitle": "Play a distinct sound for critical calls",
+  "settingsVibration": "Device vibration",
+  "settingsVibrationSubtitle": "Quick alerts during duty",
+  "settingsOperationsShift": "Operations and duty",
+  "settingsShiftMode": "Duty mode",
+  "settingsShiftDismissal": "Dismissal duty",
+  "settingsShiftMorning": "Morning duty",
+  "settingsShiftEvening": "Evening duty",
+  "settingsAutoOpenUrgent": "Open urgent requests automatically",
+  "settingsAutoOpenUrgentSubtitle": "Navigate directly to a newly received urgent request",
+  "settingsSyncGates": "Sync gate data",
+  "settingsSyncGatesSubtitle": "Reconnect and refresh operational signals",
+  "settingsSyncSuccess": "Realtime updates reconnected",
+  "settingsLanguagePrivacy": "Language and privacy",
+  "settingsAppLanguage": "Application language",
+  "settingsLanguageArabic": "Arabic",
+  "settingsLanguageEnglish": "English",
+  "settingsWifiOnly": "Sync over Wi-Fi only",
+  "settingsWifiOnlySubtitle": "Reduce mobile data usage during duty",
+  "settingsHideSensitive": "Hide sensitive data",
+  "settingsHideSensitiveSubtitle": "Partially mask identities and contact details",
+  "navWaiting": "Waiting",
+  "navGates": "Gates",
+  "permissionDeniedTitle": "Access unavailable",
+  "permissionDeniedDescription": "Your account does not have permission to view this section. Contact the school administration if this is unexpected.",
+  "drawerDailyWork": "Daily operations",
+  "drawerCallsBoard": "Dismissal board",
+  "drawerCallsBoardSubtitle": "Active pickup requests",
+  "drawerCallsHistory": "Calls history",
+  "drawerCallsHistorySubtitle": "Completed and closed requests",
+  "drawerGates": "Gates and duties",
+  "drawerGatesSubtitle": "Assigned handover points",
+  "drawerWaiting": "Waiting students",
+  "drawerWaitingSubtitle": "Students not handed over yet",
+  "drawerAccountSafety": "Account and safety",
+  "drawerProfile": "Profile",
+  "drawerProfileSubtitle": "Staff identity and permissions",
+  "drawerNotifications": "Notifications",
+  "drawerNotificationsSubtitle": "Urgent requests and delays",
+  "drawerSettings": "Settings",
+  "drawerSettingsSubtitle": "Sound, language, and notifications",
+  "drawerSupportLegal": "Support and legal",
+  "drawerHelp": "Help and support",
+  "drawerHelpSubtitle": "Contact Moazez support",
+  "drawerTerms": "Terms and conditions",
+  "drawerTermsSubtitle": "Application usage rules",
+  "drawerPrivacy": "Privacy policy",
+  "drawerPrivacySubtitle": "Protection of student data",
+  "drawerLogout": "Log out",
+  "dismissalStatusRequested": "New request",
+  "dismissalStatusQueued": "In queue",
+  "dismissalStatusCalled": "Called",
+  "dismissalStatusMoving": "Moving to gate",
+  "dismissalStatusAtGate": "At gate",
+  "dismissalStatusReady": "Ready for handover",
+  "dismissalStatusHandedOver": "Handed over",
+  "dismissalStatusCancelled": "Cancelled",
+  "dismissalStatusExpired": "Expired",
+  "dismissalStatusUnknown": "Unknown",
+  "dismissalSuccessNotificationRead": "Notification marked as read",
+  "dismissalSuccessAllNotificationsRead": "All notifications marked as read",
+  "dismissalSuccessStatusUpdated": "Request status updated",
+  "dismissalSuccessArrivalConfirmed": "Student arrival at the gate confirmed",
+  "dismissalSuccessDelivered": "Student handed over successfully",
+  "dismissalSuccessEscalated": "Request escalated to the supervisor",
+  "dismissalSuccessDeviceRegistered": "Device registered for notifications",
+  "dismissalSuccessDeviceUnregistered": "Device removed from notifications",
+  "dismissalFallbackGuardian": "Guardian",
+  "dismissalFallbackStudent": "Student",
+  "dismissalFallbackGate": "Gate",
+  "dismissalFallbackNotification": "Dismissal notification",
+  "dismissalUnknownValue": "Not specified",
+  "dismissalAll": "All",
+  "dismissalAllGates": "All gates",
+  "dismissalSearchHint": "Search by student, guardian, or gate",
+  "dismissalHistorySearchHint": "Search by student, guardian, or request number",
+  "dismissalResults": "Results",
+  "dismissalWaitingTitle": "Waiting students",
+  "dismissalCallsHistoryTitle": "Calls history",
+  "dismissalGatesTitle": "Gates and duties",
+  "dismissalNotificationsTitle": "Notifications",
+  "dismissalProfileTitle": "Profile",
+  "dismissalStaffRole": "Dismissal staff",
+  "dismissalProfileAssignments": "Active assignments",
+  "dismissalProfileAssignedGates": "Assigned gates",
+  "dismissalProfileReadiness": "Operational readiness",
+  "dismissalProfileReady": "Ready to operate",
+  "dismissalProfileNotReady": "Assignment setup is incomplete",
+  "dismissalProfilePermissions": "Granted permissions",
+  "dismissalProfileNoGates": "No gate assignments",
+  "permissionProfileView": "View staff profile",
+  "permissionGatesView": "View assigned gates",
+  "permissionRequestsView": "View pickup requests",
+  "permissionRequestsManage": "Manage request status",
+  "permissionRequestsDeliver": "Verify and hand over students",
+  "permissionRequestsEscalate": "Escalate delayed requests",
+  "permissionHistoryView": "View calls history",
+  "permissionNotificationsView": "View notifications",
+  "permissionNotificationsManage": "Manage notification read state",
+  "permissionDeviceTokensManage": "Receive device notifications",
+  "dismissalSettingsTitle": "Settings",
+  "dismissalMarkAllRead": "Mark all as read",
+  "dismissalMarkRead": "Mark as read",
+  "dismissalEscalate": "Escalate",
+  "dismissalConfirmArrival": "Confirm arrival",
+  "dismissalArrivalConfirmed": "Arrival confirmed",
+  "dismissalWaitingList": "Waiting list",
+  "dismissalGateField": "Gate",
+  "dismissalDeliver": "Verify and hand over",
+  "dismissalQueueAction": "Add to queue",
+  "dismissalCallAction": "Call student",
+  "dismissalMovingAction": "Start moving",
+  "dismissalAtGateAction": "Reached gate",
+  "dismissalReadyAction": "Ready for handover",
+  "dismissalUrgent": "Urgent",
+  "dismissalDelayed": "Delayed",
+  "dismissalWaitMinutes": "Waiting {minutes} min",
+  "@dismissalWaitMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "num"
+      }
+    }
+  },
+  "dismissalActive": "Active",
+  "dismissalOpen": "Open",
+  "dismissalBusy": "Busy",
+  "dismissalClosed": "Closed",
+  "dismissalMaintenance": "Maintenance",
+  "dismissalTotal": "Total",
+  "dismissalUnread": "Unread",
+  "dismissalCritical": "Critical",
+  "dismissalDelivered": "Delivered",
+  "dismissalCancelled": "Cancelled",
+  "dismissalExpired": "Expired",
+  "dismissalNoActiveRequests": "No active pickup requests",
+  "dismissalNoWaitingStudents": "No students are waiting at the moment",
+  "dismissalNoHistory": "No requests match the selected filters",
+  "dismissalNoNotifications": "No notifications are available",
+  "dismissalNoNotificationsBody": "New operational notifications will appear here when received.",
+  "dismissalNoWaitingStudentsBody": "Waiting requests will appear here once they move into the calling stage.",
+  "dismissalCallsSubtitle": "Active dismissal requests now",
+  "dismissalLiveCount": "{count} live",
+  "@dismissalLiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dismissalWaiting": "Waiting",
+  "dismissalProcessing": "Processing...",
+  "dismissalQueueTitle": "Dismissal queue",
+  "dismissalNoActiveRequestsBody": "New guardian pickup requests will appear here immediately for operational follow-up.",
+  "dismissalDeliverStudent": "Hand over {name}",
+  "@dismissalDeliverStudent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dismissalDeliveryInstruction": "Verify the recipient and pickup code before completing handover.",
+  "dismissalAuthorizedRecipient": "Authorized recipient",
+  "dismissalPickupCode": "Pickup code",
+  "dismissalOptionalNote": "Optional note",
+  "dismissalProcessingDelivery": "Completing handover...",
+  "dismissalConfirmDelivery": "Confirm handover",
+  "dismissalRequestDetailsTitle": "Dismissal request details",
+  "dismissalStudentDetails": "Student details",
+  "dismissalStudentName": "Student name",
+  "dismissalClass": "Grade and class",
+  "dismissalPickupDetails": "Pickup details",
+  "dismissalGuardianName": "Guardian",
+  "dismissalWaitLabel": "Waiting time",
+  "dismissalOperationDetails": "Operation details",
+  "dismissalRequestNumber": "Request number",
+  "dismissalRequestedAt": "Request time",
+  "dismissalUpdatedAt": "Last update",
+  "dismissalUnreadOnly": "Show unread notifications only",
+  "dismissalNotificationsList": "Notifications list",
+  "dismissalNotificationsCount": "{count} notifications",
+  "@dismissalNotificationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "dismissalPriorityImportant": "Important",
+  "dismissalPriorityNormal": "Normal",
+  "dismissalNoGates": "No gates are assigned to this account",
+  "dismissalGatesSectionTitle": "Gate status now",
+  "dismissalGatesSectionSubtitle": "Monitor assigned handover points and available waiting zones.",
+  "dismissalAssignmentsCount": "{count} assignments",
+  "@dismissalAssignmentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dismissalNoGatesTitle": "No gates available",
+  "dismissalNoGatesBody": "Gates will appear here once enabled by administration.",
+  "dismissalOperationalAssignmentsNote": "Duties are shown from the staff profile assignments and the recorded operational gate status.",
+  "dismissalInactive": "Inactive",
+  "dismissalLocationConfigured": "Location configured",
+  "dismissalGateDetailsUnavailable": "Gate details unavailable",
+  "dismissalRetry": "Try again",
+  "dismissalNoAuthorizedRecipient": "No authorized recipient is available for this request yet.",
+  "dismissalPickupCodeRequired": "Enter the pickup code before handover.",
+  "dismissalNoActionForStatus": "No action is available for this status: {status}",
+  "@dismissalNoActionForStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "dismissalRequestsCount": "{count} requests",
+  "@dismissalRequestsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "dismissalStudentsCount": "{count} students",
+  "@dismissalStudentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "dismissalOperationsCount": "{count} operations",
+  "@dismissalOperationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "dismissalLastUpdateUnknown": "Last update unavailable",
+  "dismissalLastUpdate": "Last update {value}",
+  "@dismissalLastUpdate": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "snackbarSuccessTitle": "Success",
+  "snackbarErrorTitle": "Error",
+  "snackbarWarningTitle": "Warning",
+  "snackbarInfoTitle": "Information",
   "@_comment_typed_failures": "Typed Failure Messages",
   "errorNetwork": "No internet connection",
   "errorNetworkAction": "Check your internet connection",

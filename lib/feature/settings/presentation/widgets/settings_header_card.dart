@@ -5,12 +5,14 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../generated/app_localizations.dart';
 
 class SettingsHeaderCard extends StatelessWidget {
   const SettingsHeaderCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
@@ -39,7 +41,7 @@ class SettingsHeaderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'إعدادات التشغيل',
+                  l10n.settingsHeaderTitle,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.primaryDeep,
                     fontWeight: FontWeight.w900,
@@ -47,7 +49,7 @@ class SettingsHeaderCard extends StatelessWidget {
                 ),
                 AppSpacing.verticalSpaceXxs,
                 Text(
-                  'تحكم في التنبيهات والمناوبة وخصوصية بيانات الطلاب.',
+                  l10n.settingsHeaderSubtitle,
                   style: AppTypography.caption.copyWith(
                     color: AppColors.textSecondaryLight,
                     fontWeight: FontWeight.w700,

@@ -5,12 +5,14 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../generated/app_localizations.dart';
 
 class NotificationsEmptyState extends StatelessWidget {
   const NotificationsEmptyState({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: AppSpacing.allXl,
       decoration: BoxDecoration(
@@ -27,7 +29,7 @@ class NotificationsEmptyState extends StatelessWidget {
           ),
           AppSpacing.verticalSpaceMd,
           Text(
-            'لا توجد تنبيهات مطابقة',
+            l10n.dismissalNoNotifications,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
               fontWeight: FontWeight.w900,
@@ -35,7 +37,7 @@ class NotificationsEmptyState extends StatelessWidget {
           ),
           AppSpacing.verticalSpaceSm,
           Text(
-            'جرّب تغيير نوع التنبيه أو عرض كل التنبيهات.',
+            l10n.dismissalNoNotificationsBody,
             textAlign: TextAlign.center,
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.textSecondaryLight,

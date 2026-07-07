@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart'
     show ContentType;
-import 'package:ndaaa_chat/core/localization/app_localizations_ar.dart';
+import '../../../generated/app_localizations.dart';
 
 /// Premium modern snackbar system with custom animations and colors
 /// Provides success, error, warning, and info feedback with beautiful animations
@@ -29,7 +29,10 @@ class PremiumSnackbar {
   }) {
     _showAnimatedSnackbar(
       context,
-      title: title ?? AppLocalizationsAr.successTitle,
+      title:
+          title ??
+          AppLocalizations.of(context)?.snackbarSuccessTitle ??
+          'Success',
       message: message,
       contentType: ContentType.success,
       duration: duration,
@@ -48,7 +51,10 @@ class PremiumSnackbar {
   }) {
     _showAnimatedSnackbar(
       context,
-      title: title ?? AppLocalizationsAr.errorTitle,
+      title:
+          title ??
+          AppLocalizations.of(context)?.snackbarErrorTitle ??
+          'Error',
       message: message,
       contentType: ContentType.failure,
       duration: duration,
@@ -66,7 +72,10 @@ class PremiumSnackbar {
   }) {
     _showAnimatedSnackbar(
       context,
-      title: title ?? 'تحذير!',
+      title:
+          title ??
+          AppLocalizations.of(context)?.snackbarWarningTitle ??
+          'Warning',
       message: message,
       contentType: ContentType.warning,
       duration: duration,
@@ -84,7 +93,10 @@ class PremiumSnackbar {
   }) {
     _showAnimatedSnackbar(
       context,
-      title: title ?? 'معلومة!',
+      title:
+          title ??
+          AppLocalizations.of(context)?.snackbarInfoTitle ??
+          'Information',
       message: message,
       contentType: ContentType.help,
       duration: duration,

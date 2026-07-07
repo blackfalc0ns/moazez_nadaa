@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../generated/app_localizations.dart';
 
 class CallsSummaryStrip extends StatelessWidget {
   const CallsSummaryStrip({
@@ -22,31 +23,32 @@ class CallsSummaryStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       height: 104,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
           _SummaryCard(
-            label: 'جديد',
+            label: l10n.dismissalStatusRequested,
             value: '$newCount',
             icon: Iconsax.notification,
             color: AppColors.info,
           ),
           _SummaryCard(
-            label: 'قيد التجهيز',
+            label: l10n.dismissalStatusCalled,
             value: '$preparingCount',
             icon: Iconsax.timer_start,
             color: AppColors.warning,
           ),
           _SummaryCard(
-            label: 'جاهز للتسليم',
+            label: l10n.dismissalStatusReady,
             value: '$readyCount',
             icon: Iconsax.shield_tick,
             color: AppColors.success,
           ),
           _SummaryCard(
-            label: 'متأخر',
+            label: l10n.dismissalDelayed,
             value: '$delayedCount',
             icon: Iconsax.clock,
             color: AppColors.error,

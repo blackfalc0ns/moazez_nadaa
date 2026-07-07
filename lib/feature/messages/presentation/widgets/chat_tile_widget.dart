@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/utils/helper/on_genrated_routes.dart';
 import '../../data/models/chat_contact_model.dart';
 
 class ChatTileWidget extends StatelessWidget {
@@ -15,18 +14,12 @@ class ChatTileWidget extends StatelessWidget {
     final bool hasUnread = contact.unreadCount > 0;
 
     return InkWell(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          Routes.chatDetails,
-          arguments: {
-            'peerName': contact.name,
-            'peerAvatarUrl': contact.imagePath,
-          },
-        );
-      },
+      onTap: null,
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.sm,
+        ),
         leading: Stack(
           children: [
             CircleAvatar(
@@ -106,9 +99,7 @@ class ChatTileWidget extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               contact.date,
-              style: AppTypography.bodySmall.copyWith(
-                color: Colors.grey[400],
-              ),
+              style: AppTypography.bodySmall.copyWith(color: Colors.grey[400]),
             ),
           ],
         ),

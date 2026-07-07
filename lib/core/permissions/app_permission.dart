@@ -1,16 +1,39 @@
-enum AppPermission { viewMessages, manageCalls, viewProfile }
+enum AppPermission {
+  viewProfile,
+  viewGates,
+  viewRequests,
+  manageRequests,
+  deliverRequests,
+  escalateRequests,
+  viewHistory,
+  viewNotifications,
+  manageNotifications,
+  manageDeviceTokens,
+}
 
 extension AppPermissionKey on AppPermission {
-  /// Primary API permission string that maps to this enum value.
-  /// Used for caching and reverse lookup.
   String get key {
     switch (this) {
-      case AppPermission.viewMessages:
-        return 'communication.messages.view';
-      case AppPermission.manageCalls:
-        return 'pickup.calls.manage';
       case AppPermission.viewProfile:
-        return 'profile.read';
+        return 'dismissal.profile.view';
+      case AppPermission.viewGates:
+        return 'dismissal.gates.view';
+      case AppPermission.viewRequests:
+        return 'dismissal.requests.view';
+      case AppPermission.manageRequests:
+        return 'dismissal.requests.manage';
+      case AppPermission.deliverRequests:
+        return 'dismissal.requests.deliver';
+      case AppPermission.escalateRequests:
+        return 'dismissal.requests.escalate';
+      case AppPermission.viewHistory:
+        return 'dismissal.requests.history.view';
+      case AppPermission.viewNotifications:
+        return 'dismissal.notifications.view';
+      case AppPermission.manageNotifications:
+        return 'dismissal.notifications.manage';
+      case AppPermission.manageDeviceTokens:
+        return 'app.device_tokens.manage';
     }
   }
 }

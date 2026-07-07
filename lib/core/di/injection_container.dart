@@ -1,68 +1,62 @@
-import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/storage_keys.dart';
+import '../../feature/dismissal/data/di/dismissal_di.dart';
+import '../../feature/auth/data/di/dismissal_auth_di.dart';
+import '../api/api_client.dart';
+import '../api/api_service.dart';
 import '../config/environment.dart';
+import '../constants/storage_keys.dart';
+import '../interceptors/auth_interceptor.dart';
+import '../interceptors/language_interceptor.dart';
+import '../interceptors/refresh_token_interceptor.dart';
 import '../localization/app_locale_controller.dart';
 import '../permissions/default_permission_repository.dart';
 import '../permissions/permission_repository.dart';
-import '../security/certificate_pinning.dart';
-
-import '../api/api_client.dart';
-import '../api/api_service.dart';
-import '../interceptors/language_interceptor.dart';
-import '../interceptors/auth_interceptor.dart';
-import '../interceptors/refresh_token_interceptor.dart';
 import '../realtime/realtime_service.dart';
+import '../security/certificate_pinning.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initDI() async {
-  // External
   final sharedPreferences = await SharedPreferences.getInstance();
-  sl.registerLazySingleton(() => sharedPreferences);
+  const secureStorage = FlutterSecureStorage();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+  sl.registerLazySingleton<FlutterSecureStorage>(() => secureStorage);
 
-  // App locale controller
   final initialLocaleCode = sharedPreferences.getString(StorageKeys.locale);
-  final appLocaleController = AppLocaleController(
+  final localeController = AppLocaleController(
     prefs: sharedPreferences,
     initialLocale: Locale(initialLocaleCode ?? 'ar'),
   );
-  await appLocaleController.load();
-  sl.registerLazySingleton<AppLocaleController>(() => appLocaleController);
+  await localeController.load();
+  sl.registerLazySingleton<AppLocaleController>(() => localeController);
 
-  // Permission foundation
-  final permissionRepository =
-      DefaultPermissionRepository(prefs: sharedPreferences);
+  final permissionRepository = DefaultPermissionRepository(
+    prefs: sharedPreferences,
+    secureStorage: secureStorage,
+  );
   await permissionRepository.warmup();
   sl.registerLazySingleton<PermissionRepository>(() => permissionRepository);
 
-  // Core - API Client & Service
   final apiClient = ApiClient();
-
-  // Certificate pinning (enabled only when fingerprints are configured)
-  final certs = CertificatePinningConfig.getCertificatesForEnvironment(
+  final certificates = CertificatePinningConfig.getCertificatesForEnvironment(
     Environment.current.name,
   );
-  if (certs.isNotEmpty) {
+  if (certificates.isNotEmpty) {
     CertificatePinning.setupCertificatePinning(
       apiClient.dio,
-      allowedSHA256Fingerprints: certs,
+      allowedSHA256Fingerprints: certificates,
       allowBadCertificates: Environment.isDevelopment,
     );
   }
-  
-  // ✅ Add Language Interceptor (sends Accept-Language header)
+
   apiClient.addInterceptor(
-    LanguageInterceptor(
-      getCurrentLocale: () => sl<AppLocaleController>().locale,
-    ),
+    LanguageInterceptor(getCurrentLocale: () => localeController.locale),
   );
-  
-  // ✅ Add Pretty Dio Logger for debugging
   apiClient.addInterceptor(
     PrettyDioLogger(
       requestHeader: true,
@@ -74,28 +68,14 @@ Future<void> initDI() async {
       maxWidth: 90,
     ),
   );
-
-  // ✅ Register FlutterSecureStorage early (needed by interceptors)
-  if (!sl.isRegistered<FlutterSecureStorage>()) {
-    sl.registerLazySingleton<FlutterSecureStorage>(
-      () => const FlutterSecureStorage(),
-    );
-  }
-
-  // ✅ Add Auth Interceptor — reads token from SecureStorage on every request
-  apiClient.addInterceptor(
-    AuthInterceptor(sl<FlutterSecureStorage>()),
-  );
-
-  // ✅ Add Refresh Token Interceptor — handles 401 by calling /auth/refresh
+  apiClient.addInterceptor(AuthInterceptor(secureStorage));
   apiClient.addInterceptor(
     RefreshTokenInterceptor(
       dio: apiClient.dio,
-      secureStorage: sl<FlutterSecureStorage>(),
+      secureStorage: secureStorage,
       onRefreshFailed: () {
-        // On refresh failure: clear global auth header so next requests don't 401-loop
         apiClient.clearAuthToken();
-        // Disconnect socket per security checklist: if REST returns 401, disconnect socket
+        permissionRepository.clear();
         RealtimeService.instance.disconnect();
       },
     ),
@@ -106,6 +86,6 @@ Future<void> initDI() async {
   RealtimeService.init(apiClient);
   sl.registerLazySingleton<RealtimeService>(() => RealtimeService.instance);
 
-  // Features
-
+  DismissalDI.init(sl);
+  DismissalAuthDI.init(sl);
 }

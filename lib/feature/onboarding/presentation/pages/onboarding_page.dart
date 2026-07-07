@@ -6,6 +6,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/helper/on_genrated_routes.dart';
+import '../../../../generated/app_localizations.dart';
 import '../../data/onboarding_dummy_data.dart';
 import '../widgets/onboarding_glass_card.dart';
 
@@ -31,7 +32,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
 
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, Routes.root);
+    Navigator.pushReplacementNamed(context, Routes.login);
   }
 
   Future<void> _handleNext() async {
@@ -54,8 +55,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final pages = OnboardingData.pages;
-    final currentItem = pages[_currentIndex];
+    final descriptions = [
+      l10n.onboardingDescriptionOne,
+      l10n.onboardingDescriptionTwo,
+      l10n.onboardingDescriptionThree,
+    ];
 
     return Scaffold(
       body: Stack(
@@ -112,7 +118,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       ),
                     ),
                     child: Text(
-                      'تخطي',
+                      l10n.onboardingSkip,
                       style: AppTypography.labelLarge.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
@@ -129,7 +135,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               widthFactor: 1,
               heightFactor: 0.34,
               child: OnboardingGlassCard(
-                description: currentItem.description,
+                description: descriptions[_currentIndex],
                 currentIndex: _currentIndex,
                 totalCount: pages.length,
                 onNext: _handleNext,

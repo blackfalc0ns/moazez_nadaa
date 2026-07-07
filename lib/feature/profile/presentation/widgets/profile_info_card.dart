@@ -5,15 +5,17 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../data/models/staff_profile.dart';
+import '../../../../generated/app_localizations.dart';
+import '../../../dismissal/data/models/dismissal_models.dart';
 
 class ProfileInfoCard extends StatelessWidget {
   const ProfileInfoCard({super.key, required this.profile});
 
-  final StaffProfile profile;
+  final DismissalProfileModel profile;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
@@ -24,24 +26,27 @@ class ProfileInfoCard extends StatelessWidget {
       child: Column(
         children: [
           _InfoRow(
+            icon: Iconsax.task_square,
+            title: l10n.dismissalProfileAssignments,
+            value: '${profile.assignmentsCount}',
+          ),
+          const _Divider(),
+          _InfoRow(
             icon: Iconsax.location_tick,
-            title: 'البوابة الأساسية',
-            value: profile.primaryGate,
+            title: l10n.dismissalProfileAssignedGates,
+            value: profile.gates.isEmpty
+                ? l10n.dismissalProfileNoGates
+                : profile.gates.join(' - '),
           ),
           const _Divider(),
           _InfoRow(
-            icon: Iconsax.calendar_tick,
-            title: 'المناوبة الحالية',
-            value: profile.currentShift,
+            icon: profile.ready ? Iconsax.tick_circle : Iconsax.warning_2,
+            title: l10n.dismissalProfileReadiness,
+            value: profile.ready
+                ? l10n.dismissalProfileReady
+                : l10n.dismissalProfileNotReady,
+            valueColor: profile.ready ? AppColors.success : AppColors.warning,
           ),
-          const _Divider(),
-          _InfoRow(
-            icon: Iconsax.call,
-            title: 'رقم التواصل',
-            value: profile.phone,
-          ),
-          const _Divider(),
-          _InfoRow(icon: Iconsax.sms, title: 'البريد', value: profile.email),
         ],
       ),
     );
@@ -53,19 +58,21 @@ class _InfoRow extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.value,
+    this.valueColor,
   });
 
   final IconData icon;
   final String title;
   final String value;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          width: 36,
-          height: 36,
+          width: 38,
+          height: 38,
           decoration: BoxDecoration(
             color: AppColors.primary.withValues(alpha: 0.08),
             borderRadius: AppRadius.all(AppRadius.radius3),
@@ -84,13 +91,10 @@ class _InfoRow extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              AppSpacing.verticalSpaceXxs,
               Text(
                 value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
                 style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.primaryDeep,
+                  color: valueColor ?? AppColors.primaryDeep,
                   fontWeight: FontWeight.w900,
                 ),
               ),

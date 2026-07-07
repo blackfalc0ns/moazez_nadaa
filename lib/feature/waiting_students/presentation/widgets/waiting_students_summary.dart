@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../generated/app_localizations.dart';
 
 class WaitingStudentsSummary extends StatelessWidget {
   const WaitingStudentsSummary({
@@ -20,25 +21,26 @@ class WaitingStudentsSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         _SummaryTile(
           icon: Iconsax.profile_2user,
-          label: 'منتظر',
+          label: l10n.dismissalWaiting,
           value: '$totalCount',
           color: AppColors.primary,
         ),
         AppSpacing.horizontalSpaceSm,
         _SummaryTile(
           icon: Iconsax.timer_pause,
-          label: 'متأخر',
+          label: l10n.dismissalDelayed,
           value: '$delayedCount',
           color: AppColors.error,
         ),
         AppSpacing.horizontalSpaceSm,
         _SummaryTile(
           icon: Iconsax.location_tick,
-          label: 'عند البوابة',
+          label: l10n.dismissalStatusAtGate,
           value: '$atGateCount',
           color: AppColors.success,
         ),

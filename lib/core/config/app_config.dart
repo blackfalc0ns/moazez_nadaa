@@ -2,10 +2,10 @@
 /// Centralizes all app-wide configuration settings
 class AppConfig {
   /// Application name
-  static const String appName = 'Teacher App';
+  static const String appName = 'Moazez Dismissal';
 
   /// Application name in Arabic
-  static const String appNameAr = 'تطبيق المعلم';
+  static const String appNameAr = 'نداء معزز';
 
   /// Application version
   static const String version = '1.0.0';
@@ -14,7 +14,7 @@ class AppConfig {
   static const int buildNumber = 1;
 
   /// Application identifier
-  static const String appId = 'com.teacher.app';
+  static const String appId = 'sa.moazez.dismissal';
 
   /// Minimum supported version
   static const String minSupportedVersion = '1.0.0';
@@ -23,7 +23,7 @@ class AppConfig {
   static const List<String> supportedLocales = ['en', 'ar'];
 
   /// Default locale
-  static const String defaultLocale = 'en';
+  static const String defaultLocale = 'ar';
 
   /// RTL languages list
   static const List<String> rtlLanguages = ['ar', 'he', 'fa', 'ur'];
@@ -62,7 +62,8 @@ class AppConfig {
   static bool isRtlLanguage(String locale) => rtlLanguages.contains(locale);
 
   /// Check if current locale is RTL
-  static bool isCurrentLocaleRtl(String currentLocale) => isRtlLanguage(currentLocale);
+  static bool isCurrentLocaleRtl(String currentLocale) =>
+      isRtlLanguage(currentLocale);
 }
 
 /// Environment configuration
@@ -81,7 +82,8 @@ class EnvironmentConfig {
   }
 
   /// Check if current environment is development
-  static bool get isDevelopment => _currentEnvironment == Environment.development;
+  static bool get isDevelopment =>
+      _currentEnvironment == Environment.development;
 
   /// Check if current environment is staging
   static bool get isStaging => _currentEnvironment == Environment.staging;

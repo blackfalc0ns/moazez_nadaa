@@ -7,7 +7,7 @@ import 'package:ndaaa_chat/core/theme/app_spacing.dart';
 import 'package:ndaaa_chat/core/theme/app_typography.dart';
 
 /// Onboarding Glass Card with Core Design System
-/// 
+///
 /// Features:
 /// - ✅ AppTypography for text
 /// - ✅ AppSpacing for spacing
@@ -61,7 +61,7 @@ class OnboardingGlassCard extends StatelessWidget {
             child: Column(
               children: [
                 AppSpacing.verticalSpaceLg,
-                
+
                 // Description Text
                 Expanded(
                   child: Center(
@@ -75,7 +75,7 @@ class OnboardingGlassCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Bottom Row (Indicators + Next Button)
                 Row(
                   children: [
@@ -96,15 +96,17 @@ class OnboardingGlassCard extends StatelessWidget {
                                   : AppColors.textSecondaryLight.withValues(
                                       alpha: 0.35,
                                     ),
-                              borderRadius: BorderRadius.circular(AppRadius.radiusFull),
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.radiusFull,
+                              ),
                             ),
                           );
                         }),
                       ),
                     ),
-                    
+
                     const Spacer(),
-                    
+
                     // Next/Finish Button
                     InkWell(
                       onTap: onNext,
@@ -130,7 +132,7 @@ class OnboardingGlassCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Glassmorphism Effect at Top
           Positioned(
             top: 0,
