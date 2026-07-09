@@ -82,7 +82,7 @@ class _WaitingStudentsPageState extends State<WaitingStudentsPage> {
           final isInitialLoading = state.isLoadingWaiting && waiting == null;
 
           return Scaffold(
-            appBar: CustomAppBar(title: l10n.dismissalWaitingTitle),
+            appBar: CustomAppBar(title: l10n.dismissalWaitingTitle , showBackButton: false,),
             body: isInitialLoading
                 ? const Center(child: LogoShimmerLoader(size: 112))
                 : RefreshIndicator(

@@ -14,6 +14,7 @@ import '../interceptors/auth_interceptor.dart';
 import '../interceptors/language_interceptor.dart';
 import '../interceptors/refresh_token_interceptor.dart';
 import '../localization/app_locale_controller.dart';
+import '../utils/helper/global_navigator.dart';
 import '../permissions/default_permission_repository.dart';
 import '../permissions/permission_repository.dart';
 import '../realtime/realtime_service.dart';
@@ -77,6 +78,7 @@ Future<void> initDI() async {
         apiClient.clearAuthToken();
         permissionRepository.clear();
         RealtimeService.instance.disconnect();
+        GlobalNavigator.navigateToLogin();
       },
     ),
   );

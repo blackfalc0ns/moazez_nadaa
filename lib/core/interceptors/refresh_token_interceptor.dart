@@ -41,6 +41,11 @@ class RefreshTokenInterceptor extends Interceptor {
       return handler.next(err);
     }
 
+    // Skip refresh for login endpoint itself to allow proper error handling in the UI
+    if (err.requestOptions.path.contains('/auth/login')) {
+      return handler.next(err);
+    }
+
     // Skip refresh for refresh token endpoint itself
     if (err.requestOptions.path.contains(refreshTokenEndpoint)) {
       developer.log(

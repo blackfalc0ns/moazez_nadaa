@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'core/di/injection_container.dart';
 import 'core/theme/app_theme.dart';
 import 'core/localization/app_locale_controller.dart';
+import 'core/utils/helper/global_navigator.dart';
 import 'core/utils/helper/on_genrated_routes.dart';
 import 'generated/app_localizations.dart';
 
@@ -21,6 +22,7 @@ class MoazezChatApp extends StatelessWidget {
     return AnimatedBuilder(
       animation: localeController,
       builder: (context, _) => MaterialApp(
+        navigatorKey: GlobalNavigator.navigatorKey,
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,

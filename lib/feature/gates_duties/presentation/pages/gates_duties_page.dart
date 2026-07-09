@@ -61,7 +61,7 @@ class _GatesDutiesPageState extends State<GatesDutiesPage> {
           final isInitialLoading = state.isLoadingGates && gatesPage == null;
 
           return Scaffold(
-            appBar: CustomAppBar(title: l10n.dismissalGatesTitle),
+            appBar: CustomAppBar(title: l10n.dismissalGatesTitle , showBackButton: false,),
             body: isInitialLoading
                 ? const Center(child: LogoShimmerLoader(size: 112))
                 : RefreshIndicator(

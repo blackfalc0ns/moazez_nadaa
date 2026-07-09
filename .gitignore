@@ -33,6 +33,8 @@ migrate_working_dir/
 /build/
 /coverage/
 
+lib/feature/docs/dismissal-smart-pickup-v1
+
 # Symbolication related
 app.*.symbols
 
