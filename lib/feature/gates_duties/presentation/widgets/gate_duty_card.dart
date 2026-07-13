@@ -51,7 +51,7 @@ class GateDutyCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
@@ -121,7 +121,7 @@ class _StatusBadge extends StatelessWidget {
         status.label,
         style: AppTypography.caption.copyWith(
           color: status.color,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -154,7 +154,7 @@ class _GateMetric extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.primaryDeep,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
             ),
             Text(

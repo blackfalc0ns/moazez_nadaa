@@ -134,7 +134,7 @@ class _StaffAssignmentCard extends StatelessWidget {
       padding: AppSpacing.allMd,
       decoration: BoxDecoration(
         gradient: AppColors.primaryGradient,
-        borderRadius: AppRadius.all(AppRadius.radius7),
+        borderRadius: AppRadius.all(AppRadius.radius4),
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withValues(alpha: 0.18),
@@ -167,7 +167,7 @@ class _StaffAssignmentCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.bodyMedium.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 AppSpacing.verticalSpaceXxs,
@@ -214,7 +214,7 @@ class _AssignmentBadge extends StatelessWidget {
         l10n.dismissalAssignmentsCount(count),
         style: AppTypography.labelSmall.copyWith(
           color: Colors.white,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -301,7 +301,7 @@ class _OverviewTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.heading5.copyWith(
                       color: AppColors.primaryDeep,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
@@ -338,7 +338,7 @@ class _SectionHeader extends StatelessWidget {
           title,
           style: AppTypography.heading5.copyWith(
             color: AppColors.primaryDeep,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
         ),
         AppSpacing.verticalSpaceXxs,
@@ -404,7 +404,7 @@ class _GateBackendCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
@@ -513,7 +513,7 @@ class _GateStatusChip extends StatelessWidget {
         label,
         style: AppTypography.labelSmall.copyWith(
           color: color,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -579,7 +579,7 @@ class _EmptyGatesState extends StatelessWidget {
             l10n.dismissalNoGatesTitle,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
           AppSpacing.verticalSpaceXs,

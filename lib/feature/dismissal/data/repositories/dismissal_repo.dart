@@ -14,10 +14,7 @@ class DismissalRepo {
   final ApiService _apiService;
 
   Future<Either<TypedFailure, DismissalProfileModel>> getProfileSafe() {
-    return _get(
-      ApiEndpoints.dismissalProfile,
-      DismissalMapper.profileFromJson,
-    );
+    return _get(ApiEndpoints.dismissalProfile, DismissalMapper.profileFromJson);
   }
 
   Future<Either<TypedFailure, DismissalQueuePageModel>> getActiveQueueSafe({
@@ -41,14 +38,14 @@ class DismissalRepo {
   Future<Either<TypedFailure, DismissalRequestModel>> getRequestSafe(
     String requestId,
   ) {
-    return _get(
-      ApiEndpoints.dismissalRequest(requestId),
-      _requestFromEnvelope,
-    );
+    return _get(ApiEndpoints.dismissalRequest(requestId), _requestFromEnvelope);
   }
 
-  Future<Either<TypedFailure, DismissalQueuePageModel>>
-  getWaitingStudentsSafe({String? gateId, int page = 1, int limit = 30}) {
+  Future<Either<TypedFailure, DismissalQueuePageModel>> getWaitingStudentsSafe({
+    String? gateId,
+    int page = 1,
+    int limit = 30,
+  }) {
     return _get(
       ApiEndpoints.dismissalWaitingStudents,
       DismissalMapper.queuePageFromJson,
@@ -61,10 +58,7 @@ class DismissalRepo {
   }
 
   Future<Either<TypedFailure, DismissalGatesPageModel>> getGatesSafe() {
-    return _get(
-      ApiEndpoints.dismissalGates,
-      DismissalMapper.gatesPageFromJson,
-    );
+    return _get(ApiEndpoints.dismissalGates, DismissalMapper.gatesPageFromJson);
   }
 
   Future<Either<TypedFailure, DismissalQueuePageModel>> getHistorySafe({
@@ -117,9 +111,7 @@ class DismissalRepo {
   Future<Either<TypedFailure, bool>> markNotificationReadSafe(
     String notificationId,
   ) {
-    return _patchFlag(
-      ApiEndpoints.dismissalNotificationRead(notificationId),
-    );
+    return _patchFlag(ApiEndpoints.dismissalNotificationRead(notificationId));
   }
 
   Future<Either<TypedFailure, bool>> markAllNotificationsReadSafe() {
@@ -211,11 +203,15 @@ class DismissalRepo {
   Future<Either<TypedFailure, DismissalRequestModel>> escalateSafe({
     required String requestId,
     String? reason,
+    String? message,
   }) {
     return _post(
       ApiEndpoints.dismissalEscalate(requestId),
       _requestFromEnvelope,
-      data: {if ((reason ?? '').isNotEmpty) 'reason': reason},
+      data: {
+        if ((reason ?? '').trim().isNotEmpty) 'reason': reason!.trim(),
+        if ((message ?? '').trim().isNotEmpty) 'message': message!.trim(),
+      },
     );
   }
 

@@ -295,7 +295,8 @@ class DismissalCubit extends Cubit<DismissalState> {
     _startAction();
     final result = await _repo.escalateSafe(
       requestId: requestId,
-      reason: 'staff_escalation',
+      reason: 'parent_waiting',
+      message: 'Parent has waited too long',
     );
     if (isClosed) return;
     await result.fold((failure) async => _failAction(failure), (_) async {

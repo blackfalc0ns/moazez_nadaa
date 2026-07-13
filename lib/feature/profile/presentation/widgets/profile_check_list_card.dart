@@ -38,7 +38,7 @@ class ProfileCheckListCard extends StatelessWidget {
                 title,
                 style: AppTypography.bodyMedium.copyWith(
                   color: AppColors.primaryDeep,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

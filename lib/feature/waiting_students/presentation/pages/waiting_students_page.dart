@@ -252,7 +252,7 @@ class _WaitingFilters extends StatelessWidget {
                   ),
                   labelStyle: AppTypography.labelMedium.copyWith(
                     color: isSelected ? Colors.white : AppColors.primaryDeep,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                   selectedColor: AppColors.primary,
                   backgroundColor: AppColors.surfaceLight,
@@ -299,7 +299,7 @@ class _ResultsHeader extends StatelessWidget {
             l10n.dismissalWaitingList,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -387,7 +387,7 @@ class _WaitingStudentBackendCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
@@ -496,7 +496,7 @@ class _StatusChip extends StatelessWidget {
         status.localizedLabel(l10n),
         style: AppTypography.labelSmall.copyWith(
           color: color,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );

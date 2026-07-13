@@ -32,7 +32,7 @@ class WaitingStudentsEmptyState extends StatelessWidget {
             l10n.dismissalNoWaitingStudents,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
           AppSpacing.verticalSpaceSm,

@@ -51,7 +51,7 @@ class ProfileHeaderCard extends StatelessWidget {
                       : profile.displayName,
                   style: AppTypography.heading5.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(

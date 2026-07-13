@@ -58,17 +58,6 @@ Future<void> initDI() async {
   apiClient.addInterceptor(
     LanguageInterceptor(getCurrentLocale: () => localeController.locale),
   );
-  apiClient.addInterceptor(
-    PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-      compact: true,
-      maxWidth: 90,
-    ),
-  );
   apiClient.addInterceptor(AuthInterceptor(secureStorage));
   apiClient.addInterceptor(
     RefreshTokenInterceptor(
@@ -82,6 +71,19 @@ Future<void> initDI() async {
       },
     ),
   );
+  if (Environment.current.enableLogging) {
+    apiClient.addInterceptor(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90,
+      ),
+    );
+  }
 
   sl.registerLazySingleton<ApiClient>(() => apiClient);
   sl.registerLazySingleton<ApiService>(() => ApiService(apiClient.dio));

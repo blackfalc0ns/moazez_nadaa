@@ -180,7 +180,7 @@ class _RequestHero extends StatelessWidget {
                   request.child.displayName,
                   style: AppTypography.heading5.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
@@ -246,7 +246,7 @@ class _DetailsCard extends StatelessWidget {
                 title,
                 style: AppTypography.bodyMedium.copyWith(
                   color: AppColors.primaryDeep,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
@@ -272,7 +272,7 @@ class _DetailsCard extends StatelessWidget {
                     textAlign: TextAlign.end,
                     style: AppTypography.bodySmall.copyWith(
                       color: AppColors.primaryDeep,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),

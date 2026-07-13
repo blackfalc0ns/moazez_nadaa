@@ -313,7 +313,7 @@ class _SearchAndStatusBar extends StatelessWidget {
                 label: Text(status?.localizedLabel(l10n) ?? l10n.dismissalAll),
                 labelStyle: AppTypography.labelMedium.copyWith(
                   color: isSelected ? Colors.white : AppColors.primaryDeep,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                 ),
                 selectedColor: AppColors.primary,
                 backgroundColor: Colors.white,
@@ -345,7 +345,7 @@ class _QueueHeader extends StatelessWidget {
             l10n.dismissalQueueTitle,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -394,7 +394,7 @@ class _EmptyRequestsState extends StatelessWidget {
             l10n.dismissalNoActiveRequests,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
           AppSpacing.verticalSpaceSm,
@@ -491,7 +491,7 @@ class _DeliverySheetState extends State<_DeliverySheet> {
                   ),
                   style: AppTypography.heading5.copyWith(
                     color: AppColors.primaryDeep,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 AppSpacing.verticalSpaceXs,

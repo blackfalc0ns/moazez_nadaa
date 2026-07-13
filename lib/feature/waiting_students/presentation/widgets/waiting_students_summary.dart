@@ -84,7 +84,7 @@ class _SummaryTile extends StatelessWidget {
                     value,
                     style: AppTypography.heading5.copyWith(
                       color: AppColors.primaryDeep,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(

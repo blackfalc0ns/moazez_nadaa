@@ -32,7 +32,7 @@ class NotificationsEmptyState extends StatelessWidget {
             l10n.dismissalNoNotifications,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
           AppSpacing.verticalSpaceSm,

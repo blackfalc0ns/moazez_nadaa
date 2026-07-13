@@ -92,7 +92,7 @@ class PickupRequestCard extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                     style: AppTypography.bodyMedium.copyWith(
                                       color: AppColors.primaryDeep,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
@@ -334,7 +334,7 @@ class _ActionRow extends StatelessWidget {
             foregroundColor: AppColors.error,
             side: BorderSide(color: AppColors.error.withValues(alpha: 0.28)),
             textStyle: AppTypography.labelMedium.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
@@ -471,7 +471,7 @@ class _SignalBadge extends StatelessWidget {
             label,
             style: AppTypography.labelSmall.copyWith(
               color: color,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],
@@ -543,7 +543,7 @@ class _StatusPill extends StatelessWidget {
         label,
         style: AppTypography.labelSmall.copyWith(
           color: color,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );

@@ -52,7 +52,7 @@ class CallsHistoryRecordCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
@@ -107,7 +107,7 @@ class CallsHistoryRecordCard extends StatelessWidget {
                   color: request.status == PickupStatus.delayed
                       ? AppColors.error
                       : AppColors.success,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

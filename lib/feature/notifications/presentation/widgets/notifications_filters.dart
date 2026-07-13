@@ -41,7 +41,7 @@ class NotificationsFilters extends StatelessWidget {
                   'تصفية التنبيهات',
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.primaryDeep,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),

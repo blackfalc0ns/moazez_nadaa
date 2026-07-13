@@ -44,7 +44,7 @@ class SettingsHeaderCard extends StatelessWidget {
                   l10n.settingsHeaderTitle,
                   style: AppTypography.bodyMedium.copyWith(
                     color: AppColors.primaryDeep,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 AppSpacing.verticalSpaceXxs,

@@ -58,7 +58,7 @@ class DutyShiftCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
@@ -127,7 +127,7 @@ class _ShiftTypeBadge extends StatelessWidget {
         type.label,
         style: AppTypography.caption.copyWith(
           color: AppColors.primary,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );

@@ -95,7 +95,7 @@ class _InfoRow extends StatelessWidget {
                 value,
                 style: AppTypography.bodySmall.copyWith(
                   color: valueColor ?? AppColors.primaryDeep,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

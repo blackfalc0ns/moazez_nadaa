@@ -243,7 +243,7 @@ class _SummaryTile extends StatelessWidget {
               value,
               style: AppTypography.heading5.copyWith(
                 color: AppColors.primaryDeep,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
             ),
             Text(
@@ -290,7 +290,7 @@ class _NotificationsFilterCard extends StatelessWidget {
               l10n.dismissalUnreadOnly,
               style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.primaryDeep,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -321,7 +321,7 @@ class _ResultsHeader extends StatelessWidget {
             l10n.dismissalNotificationsList,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -396,7 +396,7 @@ class _DismissalNotificationCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(

@@ -49,7 +49,7 @@ class SettingsActionTile extends StatelessWidget {
                       title,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(

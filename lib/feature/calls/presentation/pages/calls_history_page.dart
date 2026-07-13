@@ -243,7 +243,7 @@ class _SummaryTile extends StatelessWidget {
                     value,
                     style: AppTypography.heading5.copyWith(
                       color: AppColors.primaryDeep,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
@@ -355,7 +355,7 @@ class _HistorySearchAndFilters extends StatelessWidget {
                   ),
                   labelStyle: AppTypography.labelMedium.copyWith(
                     color: isSelected ? Colors.white : AppColors.primaryDeep,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                   selectedColor: AppColors.primary,
                   backgroundColor: AppColors.surfaceLight,
@@ -402,7 +402,7 @@ class _RecordsHeader extends StatelessWidget {
             l10n.dismissalResults,
             style: AppTypography.heading5.copyWith(
               color: AppColors.primaryDeep,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -475,7 +475,7 @@ class _HistoryRecordCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.primaryDeep,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       Text(
@@ -567,7 +567,7 @@ class _StatusBadge extends StatelessWidget {
         label,
         style: AppTypography.labelSmall.copyWith(
           color: color,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
