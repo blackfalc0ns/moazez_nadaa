@@ -961,4 +961,48 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tryAgain => 'حاول مرة أخرى';
+
+  @override
+  String get auth_change_password_mismatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get auth_change_password_same_as_old =>
+      'كلمة المرور الجديدة يجب أن تختلف عن الحالية';
+
+  @override
+  String get auth_change_password_success => 'تم تغيير كلمة المرور بنجاح';
+
+  @override
+  String get auth_change_password_title => 'تغيير كلمة المرور';
+
+  @override
+  String get auth_change_password_mandatory_subtitle =>
+      'يجب تغيير كلمة المرور المؤقتة قبل المتابعة.';
+
+  @override
+  String get auth_change_password_optional_subtitle =>
+      'حدّث كلمة المرور للحفاظ على أمان حسابك.';
+
+  @override
+  String get auth_change_password_current => 'كلمة المرور الحالية';
+
+  @override
+  String get auth_change_password_new => 'كلمة المرور الجديدة';
+
+  @override
+  String get auth_change_password_rules =>
+      'كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على حرف كبير وصغير ورقم ورمز.';
+
+  @override
+  String get auth_change_password_hint =>
+      'استخدم كلمة قوية مختلفة عن كلمة المرور المؤقتة.';
+
+  @override
+  String get auth_change_password_confirm => 'تأكيد كلمة المرور';
+
+  @override
+  String get auth_change_password_save => 'حفظ كلمة المرور';
+
+  @override
+  String get auth_remember_me => 'تذكرني';
 }

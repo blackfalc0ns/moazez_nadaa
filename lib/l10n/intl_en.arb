@@ -370,6 +370,18 @@
   "errorTokenExpired": "Your session has expired",
   "errorTokenExpiredAction": "Refreshing session...",
   "errorUnknown": "An unexpected error occurred",
-  "tryAgain": "Try again"
-
+  "tryAgain": "Try again",
+  "auth_change_password_mismatch": "Passwords do not match",
+  "auth_change_password_same_as_old": "New password must be different from the current password",
+  "auth_change_password_success": "Password changed successfully",
+  "auth_change_password_title": "Change password",
+  "auth_change_password_mandatory_subtitle": "You must change your temporary password before continuing.",
+  "auth_change_password_optional_subtitle": "Update your password to keep your account secure.",
+  "auth_change_password_current": "Current password",
+  "auth_change_password_new": "New password",
+  "auth_change_password_rules": "Use at least 8 characters with uppercase, lowercase, number, and symbol.",
+  "auth_change_password_hint": "Use a strong password that differs from the temporary one.",
+  "auth_change_password_confirm": "Confirm password",
+  "auth_change_password_save": "Save password",
+  "auth_remember_me": "Remember me"
 }

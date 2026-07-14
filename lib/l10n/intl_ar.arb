@@ -371,5 +371,18 @@
   "errorTokenExpired": "انتهت صلاحية جلستك",
   "errorTokenExpiredAction": "جاري تحديث الجلسة...",
   "errorUnknown": "حدث خطأ غير متوقع",
-  "tryAgain": "حاول مرة أخرى"
+  "tryAgain": "حاول مرة أخرى",
+  "auth_change_password_mismatch": "كلمتا المرور غير متطابقتين",
+  "auth_change_password_same_as_old": "كلمة المرور الجديدة يجب أن تختلف عن الحالية",
+  "auth_change_password_success": "تم تغيير كلمة المرور بنجاح",
+  "auth_change_password_title": "تغيير كلمة المرور",
+  "auth_change_password_mandatory_subtitle": "يجب تغيير كلمة المرور المؤقتة قبل المتابعة.",
+  "auth_change_password_optional_subtitle": "حدّث كلمة المرور للحفاظ على أمان حسابك.",
+  "auth_change_password_current": "كلمة المرور الحالية",
+  "auth_change_password_new": "كلمة المرور الجديدة",
+  "auth_change_password_rules": "كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على حرف كبير وصغير ورقم ورمز.",
+  "auth_change_password_hint": "استخدم كلمة قوية مختلفة عن كلمة المرور المؤقتة.",
+  "auth_change_password_confirm": "تأكيد كلمة المرور",
+  "auth_change_password_save": "حفظ كلمة المرور",
+  "auth_remember_me": "تذكرني"
 }

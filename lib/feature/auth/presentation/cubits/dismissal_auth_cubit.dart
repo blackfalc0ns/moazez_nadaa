@@ -19,4 +19,20 @@ class DismissalAuthCubit extends Cubit<DismissalAuthState> {
       (session) => emit(DismissalAuthSuccess(session)),
     );
   }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    emit(const DismissalAuthLoading());
+    final result = await _repo.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+    if (isClosed) return;
+    result.fold(
+      (failure) => emit(DismissalAuthFailure(failure)),
+      (_) => emit(const DismissalAuthPasswordChanged()),
+    );
+  }
 }

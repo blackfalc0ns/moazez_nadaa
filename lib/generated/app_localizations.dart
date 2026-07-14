@@ -1879,6 +1879,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get tryAgain;
+
+  /// No description provided for @auth_change_password_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get auth_change_password_mismatch;
+
+  /// No description provided for @auth_change_password_same_as_old.
+  ///
+  /// In en, this message translates to:
+  /// **'New password must be different from the current password'**
+  String get auth_change_password_same_as_old;
+
+  /// No description provided for @auth_change_password_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get auth_change_password_success;
+
+  /// No description provided for @auth_change_password_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get auth_change_password_title;
+
+  /// No description provided for @auth_change_password_mandatory_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You must change your temporary password before continuing.'**
+  String get auth_change_password_mandatory_subtitle;
+
+  /// No description provided for @auth_change_password_optional_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your password to keep your account secure.'**
+  String get auth_change_password_optional_subtitle;
+
+  /// No description provided for @auth_change_password_current.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get auth_change_password_current;
+
+  /// No description provided for @auth_change_password_new.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get auth_change_password_new;
+
+  /// No description provided for @auth_change_password_rules.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 8 characters with uppercase, lowercase, number, and symbol.'**
+  String get auth_change_password_rules;
+
+  /// No description provided for @auth_change_password_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a strong password that differs from the temporary one.'**
+  String get auth_change_password_hint;
+
+  /// No description provided for @auth_change_password_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get auth_change_password_confirm;
+
+  /// No description provided for @auth_change_password_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save password'**
+  String get auth_change_password_save;
+
+  /// No description provided for @auth_remember_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember me'**
+  String get auth_remember_me;
 }
 
 class _AppLocalizationsDelegate

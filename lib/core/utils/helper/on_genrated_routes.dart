@@ -1,6 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/constants/storage_keys.dart';
 import '../../../feature/auth/presentation/pages/dismissal_login_page.dart';
+import '../../../feature/auth/presentation/pages/dismissal_change_password_page.dart';
 import '../../../feature/calls/presentation/pages/calls_history_page.dart';
 import '../../../feature/calls/presentation/pages/dismissal_request_details_page.dart';
 import '../../../feature/gates_duties/presentation/pages/gates_duties_page.dart';
@@ -21,6 +26,7 @@ class Routes {
   static const String splash = '/splash';
   static const String onboarding = '/onboarding';
   static const String login = '/login';
+  static const String changePassword = '/change-password';
   static const String callsHistory = '/calls-history';
   static const String requestDetails = '/request-details';
   static const String gatesDuties = '/gates-duties';
@@ -32,6 +38,13 @@ class Routes {
 
 class OnGeneratedRoutes {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    if (_shouldForcePasswordChange(settings.name)) {
+      return MaterialPageRoute<void>(
+        builder: (_) => const DismissalChangePasswordPage(mandatory: true),
+        settings: settings,
+      );
+    }
+
     switch (settings.name) {
       case Routes.root:
         return MaterialPageRoute<void>(
@@ -51,6 +64,17 @@ class OnGeneratedRoutes {
       case Routes.login:
         return MaterialPageRoute<void>(
           builder: (_) => const DismissalLoginPage(),
+          settings: settings,
+        );
+      case Routes.changePassword:
+        final arguments = settings.arguments;
+        final data = arguments is Map
+            ? Map<String, dynamic>.from(arguments)
+            : const <String, dynamic>{};
+        return MaterialPageRoute<void>(
+          builder: (_) => DismissalChangePasswordPage(
+            mandatory: data['mandatory'] == true || _mustChangePassword(),
+          ),
           settings: settings,
         );
       case Routes.callsHistory:
@@ -123,5 +147,30 @@ class OnGeneratedRoutes {
       builder: (_) => allowed ? page : const PermissionDeniedPage(),
       settings: settings,
     );
+  }
+
+  static bool _shouldForcePasswordChange(String? routeName) {
+    if (!_mustChangePassword()) return false;
+    return switch (routeName) {
+      Routes.splash ||
+      Routes.onboarding ||
+      Routes.login ||
+      Routes.changePassword => false,
+      _ => true,
+    };
+  }
+
+  static bool _mustChangePassword() {
+    if (!sl.isRegistered<SharedPreferences>()) return false;
+    final raw = sl<SharedPreferences>().getString(StorageKeys.userData);
+    if (raw == null || raw.isEmpty) return false;
+    try {
+      final json = jsonDecode(raw);
+      if (json is! Map) return false;
+      return json['mustChangePassword'] == true ||
+          json['must_change_password'] == true;
+    } catch (_) {
+      return false;
+    }
   }
 }

@@ -7,6 +7,7 @@ class DismissalAuthSession {
     required this.displayName,
     required this.status,
     required this.permissions,
+    this.mustChangePassword = false,
   });
 
   final String accessToken;
@@ -16,6 +17,7 @@ class DismissalAuthSession {
   final String displayName;
   final String status;
   final List<String> permissions;
+  final bool mustChangePassword;
 
   bool get isDismissalStaff =>
       userType.trim().toUpperCase() == 'DISMISSAL_STAFF';
@@ -31,6 +33,7 @@ class DismissalAuthSession {
     String? displayName,
     String? status,
     List<String>? permissions,
+    bool? mustChangePassword,
   }) {
     return DismissalAuthSession(
       accessToken: accessToken ?? this.accessToken,
@@ -40,6 +43,7 @@ class DismissalAuthSession {
       displayName: displayName ?? this.displayName,
       status: status ?? this.status,
       permissions: permissions ?? this.permissions,
+      mustChangePassword: mustChangePassword ?? this.mustChangePassword,
     );
   }
 }

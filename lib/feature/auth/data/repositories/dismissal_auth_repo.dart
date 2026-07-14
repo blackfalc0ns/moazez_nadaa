@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -41,7 +41,7 @@ class DismissalAuthRepo {
     required String password,
   }) async {
     try {
-      await clearLocalSession();
+      await clearLocalSession(cleanupPushToken: false);
       final response = await _apiService.post<Map<String, dynamic>>(
         ApiEndpoints.login,
         data: DismissalAuthMapper.loginPayload(
@@ -79,14 +79,14 @@ class DismissalAuthRepo {
       );
       if (!response.isSuccess || response.data == null) {
         if (_isSessionFailure(response.failure)) {
-          await clearLocalSession();
+          await clearLocalSession(cleanupPushToken: false);
           return null;
         }
         if (cached != null && _validateSession(cached) == null) {
           await _permissions.warmup();
           return cached;
         }
-        await clearLocalSession();
+        await clearLocalSession(cleanupPushToken: false);
         return null;
       }
 
@@ -100,9 +100,11 @@ class DismissalAuthRepo {
         permissions: remote.permissions.isEmpty
             ? cached?.permissions ?? const []
             : remote.permissions,
+        mustChangePassword:
+            remote.mustChangePassword || (cached?.mustChangePassword ?? false),
       );
       if (_validateSession(session) != null) {
-        await clearLocalSession();
+        await clearLocalSession(cleanupPushToken: false);
         return null;
       }
       await _persistSession(session);
@@ -129,9 +131,39 @@ class DismissalAuthRepo {
     return const Right(unit);
   }
 
-  Future<void> clearLocalSession() async {
-    if (sl.isRegistered<PushTokenLifecycle>()) {
-      await sl<PushTokenLifecycle>().unregisterCurrentDevice();
+  Future<Either<TypedFailure, Unit>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await _apiService.post<Map<String, dynamic>>(
+        ApiEndpoints.changePassword,
+        data: {'currentPassword': currentPassword, 'newPassword': newPassword},
+        parser: DismissalAuthMapper.extractMap,
+      );
+      if (!response.isSuccess) {
+        return Left(response.failure ?? const UnknownFailure());
+      }
+
+      final cached = _cachedSession();
+      if (cached != null) {
+        await _persistSession(cached.copyWith(mustChangePassword: false));
+      }
+      return const Right(unit);
+    } catch (error) {
+      return Left(_failureFromError(error));
+    }
+  }
+
+  Future<void> clearLocalSession({bool cleanupPushToken = true}) async {
+    if (cleanupPushToken && sl.isRegistered<PushTokenLifecycle>()) {
+      try {
+        await sl<PushTokenLifecycle>().unregisterCurrentDevice().timeout(
+          const Duration(seconds: 3),
+        );
+      } catch (_) {
+        // Local logout/session reset must not be blocked by FCM cleanup.
+      }
     }
     _apiClient.clearAuthToken();
     if (sl.isRegistered<RealtimeService>()) {

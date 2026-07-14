@@ -160,7 +160,7 @@ class AppSideDrawer extends StatelessWidget {
                       'تغيير كلمة المرور',
                       'Change password',
                     ),
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => _openRoute(context, Routes.changePassword),
                   ),
                   _tile(
                     context,

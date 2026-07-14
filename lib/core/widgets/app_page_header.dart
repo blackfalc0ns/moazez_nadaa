@@ -84,7 +84,9 @@ class _HeaderBackButton extends StatelessWidget {
             ],
           ),
           child: Icon(
-            Icons.arrow_back_ios_new_rounded,
+            isRtl
+                ? Icons.arrow_forward_ios_rounded
+                : Icons.arrow_back_ios_new_rounded,
             color: AppColors.textPrimary,
             size: 18,
           ),

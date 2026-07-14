@@ -969,4 +969,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tryAgain => 'Try again';
+
+  @override
+  String get auth_change_password_mismatch => 'Passwords do not match';
+
+  @override
+  String get auth_change_password_same_as_old =>
+      'New password must be different from the current password';
+
+  @override
+  String get auth_change_password_success => 'Password changed successfully';
+
+  @override
+  String get auth_change_password_title => 'Change password';
+
+  @override
+  String get auth_change_password_mandatory_subtitle =>
+      'You must change your temporary password before continuing.';
+
+  @override
+  String get auth_change_password_optional_subtitle =>
+      'Update your password to keep your account secure.';
+
+  @override
+  String get auth_change_password_current => 'Current password';
+
+  @override
+  String get auth_change_password_new => 'New password';
+
+  @override
+  String get auth_change_password_rules =>
+      'Use at least 8 characters with uppercase, lowercase, number, and symbol.';
+
+  @override
+  String get auth_change_password_hint =>
+      'Use a strong password that differs from the temporary one.';
+
+  @override
+  String get auth_change_password_confirm => 'Confirm password';
+
+  @override
+  String get auth_change_password_save => 'Save password';
+
+  @override
+  String get auth_remember_me => 'Remember me';
 }

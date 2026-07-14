@@ -19,6 +19,10 @@ class DismissalAuthSuccess extends DismissalAuthState {
   final DismissalAuthSession session;
 }
 
+class DismissalAuthPasswordChanged extends DismissalAuthState {
+  const DismissalAuthPasswordChanged();
+}
+
 class DismissalAuthFailure extends DismissalAuthState {
   const DismissalAuthFailure(this.failure);
 

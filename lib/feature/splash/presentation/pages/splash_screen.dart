@@ -61,7 +61,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<String> _authenticatedRoute() async {
     final session = await sl<DismissalAuthRepo>().restoreSession();
-    return session == null ? Routes.login : Routes.root;
+    if (session == null) return Routes.login;
+    return session.mustChangePassword ? Routes.changePassword : Routes.root;
   }
 
   @override

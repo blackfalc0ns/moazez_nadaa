@@ -9,6 +9,9 @@ class StorageKeys {
   static const String refreshToken = 'refresh_token';
   static const String tokenExpiry = 'token_expiry';
   static const String userId = 'user_id';
+  static const String rememberLogin = 'remember_login';
+  static const String rememberedEmail = 'remembered_email';
+  static const String rememberedPassword = 'remembered_password';
 
   // User data keys
   static const String userData = 'user_data';

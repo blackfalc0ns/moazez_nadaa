@@ -74,6 +74,14 @@ class DismissalAuthMapper {
         'ACTIVE',
       ]),
       permissions: permissions,
+      mustChangePassword:
+          _boolFrom(actor, 'mustChangePassword') ??
+          _boolFrom(actor, 'must_change_password') ??
+          _boolFrom(json, 'mustChangePassword') ??
+          _boolFrom(json, 'must_change_password') ??
+          _boolFrom(tokenPayload, 'mustChangePassword') ??
+          _boolFrom(tokenPayload, 'must_change_password') ??
+          false,
     );
   }
 
@@ -86,6 +94,7 @@ class DismissalAuthMapper {
       'displayName': session.displayName,
       'status': session.status,
       'permissions': session.permissions,
+      'mustChangePassword': session.mustChangePassword,
     };
   }
 
@@ -108,6 +117,22 @@ class DismissalAuthMapper {
       }
     }
     return '';
+  }
+
+  static bool? _boolFrom(Map<String, dynamic> json, String key) {
+    final value = json[key];
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    if (value is String) {
+      final normalized = value.trim().toLowerCase();
+      if (normalized == 'true' || normalized == '1' || normalized == 'yes') {
+        return true;
+      }
+      if (normalized == 'false' || normalized == '0' || normalized == 'no') {
+        return false;
+      }
+    }
+    return null;
   }
 
   static String _firstNonEmpty(Iterable<String> values) {
