@@ -1004,5 +1004,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_change_password_save => 'حفظ كلمة المرور';
 
   @override
+  String get auth_login_success => 'تم تسجيل الدخول بنجاح';
+
+  @override
+  String get auth_logout_success => 'تم تسجيل الخروج بنجاح';
+
+  @override
   String get auth_remember_me => 'تذكرني';
 }

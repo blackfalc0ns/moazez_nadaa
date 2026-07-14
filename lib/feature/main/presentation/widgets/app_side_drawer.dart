@@ -15,6 +15,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/helper/on_genrated_routes.dart';
 import '../../../../core/utils/navigation/custom_bottom_nav_bar.dart';
+import '../../../../core/widgets/logo_shimmer_loader.dart';
 import '../../../../generated/app_localizations.dart';
 import '../../../../core/constants/storage_keys.dart';
 import '../../../auth/data/repositories/dismissal_auth_repo.dart';
@@ -498,16 +499,7 @@ class AppSideDrawer extends StatelessWidget {
         children: [
           // Logout
           InkWell(
-            onTap: () async {
-              Navigator.pop(context);
-              await sl<DismissalAuthRepo>().logout();
-              if (!context.mounted) return;
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.login,
-                (route) => false,
-              );
-            },
+            onTap: () => _logout(context),
             borderRadius: AppRadius.all(10),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -606,5 +598,40 @@ class AppSideDrawer extends StatelessWidget {
   void _openRoute(BuildContext context, String routeName) {
     Navigator.pop(context);
     Navigator.pushNamed(context, routeName);
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    final navigator = Navigator.of(context, rootNavigator: true);
+    Navigator.pop(context);
+
+    showDialog<void>(
+      context: navigator.context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.20),
+      builder: (_) => const _LogoutLoadingDialog(),
+    );
+
+    await sl<DismissalAuthRepo>().logout();
+
+    if (navigator.canPop()) {
+      navigator.pop();
+    }
+
+    await navigator.pushNamedAndRemoveUntil(
+      Routes.login,
+      (route) => false,
+      arguments: const {'showLogoutSuccess': true},
+    );
+  }
+}
+
+class _LogoutLoadingDialog extends StatelessWidget {
+  const _LogoutLoadingDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: LogoShimmerLoader(size: 96),
+    );
   }
 }

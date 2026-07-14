@@ -34,6 +34,7 @@ class _DismissalLoginPageState extends State<DismissalLoginPage> {
   final _passwordController = TextEditingController();
   bool _rememberMe = false;
   bool _obscurePassword = true;
+  bool _didShowRouteSnackbar = false;
 
   @override
   void initState() {
@@ -46,6 +47,27 @@ class _DismissalLoginPageState extends State<DismissalLoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didShowRouteSnackbar) return;
+
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    final data = arguments is Map
+        ? Map<String, dynamic>.from(arguments)
+        : const <String, dynamic>{};
+    if (data['showLogoutSuccess'] == true) {
+      _didShowRouteSnackbar = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        PremiumSnackbar.success(
+          context,
+          message: AppLocalizations.of(context)!.auth_logout_success,
+        );
+      });
+    }
   }
 
   void _submit(BuildContext context) {
@@ -107,6 +129,9 @@ class _DismissalLoginPageState extends State<DismissalLoginPage> {
           if (state is DismissalAuthSuccess) {
             await _syncRememberedCredentials();
             if (!context.mounted) return;
+            PremiumSnackbar.success(context, message: l10n.auth_login_success);
+            await Future<void>.delayed(const Duration(milliseconds: 650));
+            if (!context.mounted) return;
             if (state.session.mustChangePassword) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -138,124 +163,148 @@ class _DismissalLoginPageState extends State<DismissalLoginPage> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomTextField(
-                        controller: _emailController,
-                        label: l10n.authEmailLabel,
-                        keyboardType: TextInputType.emailAddress,
-                        prefix: const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: FaIcon(FontAwesomeIcons.envelope, size: 18),
-                        ),
-                        fillColor: Colors.white.withValues(alpha: 0.2),
-                        enabled: !isLoading,
-                        validator: (value) {
-                          final input = (value ?? '').trim();
-                          if (input.isEmpty) {
-                            return l10n.fieldRequired;
-                          }
-                          if (!input.contains('@')) {
-                            return l10n.authEmailInvalid;
-                          }
-                          return null;
-                        },
-                      ),
-                      AppSpacing.verticalSpaceMd,
-                      CustomTextField(
-                        controller: _passwordController,
-                        label: l10n.authPasswordLabel,
-                        obscureText: _obscurePassword,
-                        prefix: const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: FaIcon(FontAwesomeIcons.lock, size: 18),
-                        ),
-                        fillColor: Colors.white.withValues(alpha: 0.2),
-                        enabled: !isLoading,
-                        suffix: IconButton(
-                          onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword,
-                          ),
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                          ),
-                        ),
-                        validator: (value) => (value ?? '').length < 6
-                            ? l10n.authPasswordInvalid
-                            : null,
-                      ),
-                      AppSpacing.verticalSpaceLg,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                AbsorbPointer(
+                  absorbing: isLoading,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 180),
+                    opacity: isLoading ? 0.38 : 1,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                            onTap: isLoading
-                                ? null
-                                : () {
-                                    setState(() => _rememberMe = !_rememberMe);
-                                  },
-                            child: Icon(
-                              _rememberMe
-                                  ? Icons.check_circle
-                                  : Icons.circle_outlined,
-                              color: AppColors.primary,
-                              size: 24,
-                            ),
-                          ),
-                          AppSpacing.horizontalSpaceXs,
-                          Text(
-                            l10n.auth_remember_me,
-                            style: AppTypography.labelLarge.copyWith(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      AppSpacing.verticalSpaceMd,
-                      SizedBox(
-                        width: double.infinity,
-                        child: CustomButton(
-                          text: l10n.authLoginButton,
-                          isLoading: false, // We use the center shimmer now
-                          onPressed: isLoading ? null : () => _submit(context),
-                        ),
-                      ),
-                      AppSpacing.verticalSpaceMd,
-                      Row(
-                        children: [
-                          const Icon(
-                            Iconsax.shield_tick,
-                            size: 16,
-                            color: AppColors.primary,
-                          ),
-                          AppSpacing.horizontalSpaceXs,
-                          Expanded(
-                            child: Text(
-                              l10n.authStaffOnlyHint,
-                              style: AppTypography.caption.copyWith(
-                                color: AppColors.primaryDeep,
-                                fontWeight: FontWeight.w700,
+                          CustomTextField(
+                            controller: _emailController,
+                            label: l10n.authEmailLabel,
+                            keyboardType: TextInputType.emailAddress,
+                            prefix: const Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.envelope,
+                                size: 18,
                               ),
                             ),
+                            fillColor: Colors.white.withValues(alpha: 0.2),
+                            enabled: !isLoading,
+                            validator: (value) {
+                              final input = (value ?? '').trim();
+                              if (input.isEmpty) {
+                                return l10n.fieldRequired;
+                              }
+                              if (!input.contains('@')) {
+                                return l10n.authEmailInvalid;
+                              }
+                              return null;
+                            },
+                          ),
+                          AppSpacing.verticalSpaceMd,
+                          CustomTextField(
+                            controller: _passwordController,
+                            label: l10n.authPasswordLabel,
+                            obscureText: _obscurePassword,
+                            prefix: const Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: FaIcon(FontAwesomeIcons.lock, size: 18),
+                            ),
+                            fillColor: Colors.white.withValues(alpha: 0.2),
+                            enabled: !isLoading,
+                            suffix: IconButton(
+                              onPressed: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                            ),
+                            validator: (value) => (value ?? '').length < 6
+                                ? l10n.authPasswordInvalid
+                                : null,
+                          ),
+                          AppSpacing.verticalSpaceLg,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: isLoading
+                                    ? null
+                                    : () {
+                                        setState(
+                                          () => _rememberMe = !_rememberMe,
+                                        );
+                                      },
+                                child: Icon(
+                                  _rememberMe
+                                      ? Icons.check_circle
+                                      : Icons.circle_outlined,
+                                  color: AppColors.primary,
+                                  size: 24,
+                                ),
+                              ),
+                              AppSpacing.horizontalSpaceXs,
+                              Text(
+                                l10n.auth_remember_me,
+                                style: AppTypography.labelLarge.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          AppSpacing.verticalSpaceMd,
+                          SizedBox(
+                            width: double.infinity,
+                            child: CustomButton(
+                              text: l10n.authLoginButton,
+                              isLoading: false,
+                              onPressed: isLoading
+                                  ? null
+                                  : () => _submit(context),
+                            ),
+                          ),
+                          AppSpacing.verticalSpaceMd,
+                          Row(
+                            children: [
+                              const Icon(
+                                Iconsax.shield_tick,
+                                size: 16,
+                                color: AppColors.primary,
+                              ),
+                              AppSpacing.horizontalSpaceXs,
+                              Expanded(
+                                child: Text(
+                                  l10n.authStaffOnlyHint,
+                                  style: AppTypography.caption.copyWith(
+                                    color: AppColors.primaryDeep,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-                if (isLoading)
-                  const Center(child: LogoShimmerLoader(size: 120)),
+                if (isLoading) const _LoginLoadingOverlay(),
               ],
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _LoginLoadingOverlay extends StatelessWidget {
+  const _LoginLoadingOverlay();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: LogoShimmerLoader(size: 92),
     );
   }
 }

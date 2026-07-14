@@ -384,5 +384,7 @@
   "auth_change_password_hint": "استخدم كلمة قوية مختلفة عن كلمة المرور المؤقتة.",
   "auth_change_password_confirm": "تأكيد كلمة المرور",
   "auth_change_password_save": "حفظ كلمة المرور",
-  "auth_remember_me": "تذكرني"
+  "auth_remember_me": "تذكرني",
+  "auth_login_success": "تم تسجيل الدخول بنجاح",
+  "auth_logout_success": "تم تسجيل الخروج بنجاح"
 }

@@ -383,5 +383,7 @@
   "auth_change_password_hint": "Use a strong password that differs from the temporary one.",
   "auth_change_password_confirm": "Confirm password",
   "auth_change_password_save": "Save password",
+  "auth_login_success": "Signed in successfully",
+  "auth_logout_success": "Signed out successfully",
   "auth_remember_me": "Remember me"
 }

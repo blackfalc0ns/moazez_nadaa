@@ -1952,6 +1952,18 @@ abstract class AppLocalizations {
   /// **'Save password'**
   String get auth_change_password_save;
 
+  /// No description provided for @auth_login_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in successfully'**
+  String get auth_login_success;
+
+  /// No description provided for @auth_logout_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out successfully'**
+  String get auth_logout_success;
+
   /// No description provided for @auth_remember_me.
   ///
   /// In en, this message translates to:

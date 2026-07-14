@@ -1012,5 +1012,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_change_password_save => 'Save password';
 
   @override
+  String get auth_login_success => 'Signed in successfully';
+
+  @override
+  String get auth_logout_success => 'Signed out successfully';
+
+  @override
   String get auth_remember_me => 'Remember me';
 }
