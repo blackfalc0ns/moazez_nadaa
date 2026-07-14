@@ -1,205 +1,231 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:async';
 import 'dart:developer' as developer;
 
-/// Refresh token interceptor that automatically refreshes expired tokens
-/// Uses the same FlutterSecureStorage instance and keys as AuthRepoImpl.
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../constants/storage_keys.dart';
+
+/// Refreshes expired access tokens and queues concurrent 401 requests.
 class RefreshTokenInterceptor extends Interceptor {
-  final Dio _dio;
-  final FlutterSecureStorage _secureStorage;
-  final String refreshTokenEndpoint;
-  final void Function()? onRefreshFailed;
-
-  // Same keys used by AuthRepoImpl
-  static const _kAccessToken = 'access_token';
-  static const _kRefreshToken = 'refresh_token';
-
-  // Lock to prevent multiple simultaneous refresh requests
-  bool _isRefreshing = false;
-  final List<_RequestRetry> _requestsQueue = [];
-
   RefreshTokenInterceptor({
     required Dio dio,
     required FlutterSecureStorage secureStorage,
     this.refreshTokenEndpoint = '/auth/refresh',
     this.onRefreshFailed,
-  })  : _dio = dio,
-        _secureStorage = secureStorage;
+    this.onTokenRefreshed,
+  }) : _dio = dio,
+       _secureStorage = secureStorage;
+
+  final Dio _dio;
+  final FlutterSecureStorage _secureStorage;
+  final String refreshTokenEndpoint;
+  final FutureOr<void> Function()? onRefreshFailed;
+  final FutureOr<void> Function(String token)? onTokenRefreshed;
+
+  static const _refreshRetryAttemptedKey = 'refresh_retry_attempted';
+
+  bool _isRefreshing = false;
+  final List<_RequestRetry> _requestsQueue = [];
 
   @override
-  void onError(
-    DioException err,
-    ErrorInterceptorHandler handler,
-  ) async {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     developer.log(
-      '🚨 onError fired: ${err.response?.statusCode} ${err.requestOptions.path}',
+      'onError fired: ${err.response?.statusCode} ${err.requestOptions.path}',
       name: 'RefreshTokenInterceptor',
     );
 
-    // Only handle 401 Unauthorized errors
-    if (err.response?.statusCode != 401) {
-      return handler.next(err);
-    }
+    if (!_shouldRefresh(err)) return handler.next(err);
 
-    // Skip refresh for login endpoint itself to allow proper error handling in the UI
-    if (err.requestOptions.path.contains('/auth/login')) {
-      return handler.next(err);
-    }
-
-    // Skip refresh for refresh token endpoint itself
     if (err.requestOptions.path.contains(refreshTokenEndpoint)) {
-      developer.log(
-        '❌ Refresh token request failed',
-        name: 'RefreshTokenInterceptor',
-      );
-      _handleRefreshFailure();
+      await _handleRefreshFailure();
       return handler.next(err);
     }
 
-    developer.log(
-      '🔐 Token expired, attempting refresh...',
-      name: 'RefreshTokenInterceptor',
-    );
-
-    // If already refreshing, queue this request
     if (_isRefreshing) {
-      _requestsQueue.add(_RequestRetry(err.requestOptions, handler));
+      _requestsQueue.add(_RequestRetry(err, handler));
       return;
     }
 
     _isRefreshing = true;
-
     try {
-      // Attempt to refresh token
       final newToken = await _refreshToken();
-
-      if (newToken != null) {
-        // Save new token (same key as AuthRepoImpl)
-        await _secureStorage.write(key: _kAccessToken, value: newToken);
-
-        // Update authorization header
-        err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
-
-        // Retry original request
-        final response = await _dio.fetch(err.requestOptions);
-
-        // Retry all queued requests
-        await _retryQueuedRequests(newToken);
-
-        _isRefreshing = false;
-        return handler.resolve(response);
-      } else {
-        // Refresh failed
+      if (newToken == null) {
         await _handleRefreshFailure();
-        _isRefreshing = false;
         return handler.next(err);
       }
-    } catch (e) {
+
+      await _secureStorage.write(key: StorageKeys.accessToken, value: newToken);
+      await onTokenRefreshed?.call(newToken);
+
+      err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+      err.requestOptions.extra[_refreshRetryAttemptedKey] = true;
+      final response = await _dio.fetch(err.requestOptions);
+      await _retryQueuedRequests(newToken);
+      return handler.resolve(response);
+    } catch (error) {
       developer.log(
-        '❌ Token refresh error: $e',
+        'Token refresh failed: $error',
         name: 'RefreshTokenInterceptor',
       );
       await _handleRefreshFailure();
-      _isRefreshing = false;
       return handler.next(err);
+    } finally {
+      _isRefreshing = false;
     }
   }
 
-  /// Refresh the access token using refresh token
-  Future<String?> _refreshToken() async {
-    try {
-      // Get refresh token from storage (same key as AuthRepoImpl)
-      final refreshToken = await _secureStorage.read(key: _kRefreshToken);
+  bool _shouldRefresh(DioException err) {
+    if (err.requestOptions.extra[_refreshRetryAttemptedKey] == true) {
+      return false;
+    }
 
-      if (refreshToken == null || refreshToken.isEmpty) {
-        developer.log(
-          '❌ No refresh token found',
-          name: 'RefreshTokenInterceptor',
+    if (_isCredentialFailure(err.response?.data)) {
+      return false;
+    }
+
+    final statusCode = err.response?.statusCode;
+    if (statusCode == 401) return true;
+
+    final data = err.response?.data;
+    if (data is Map) {
+      final error = data['error'];
+      final code = error is Map ? error['code'] : data['code'];
+      final normalized = code?.toString().trim().toLowerCase();
+      return normalized == 'auth.token.expired' ||
+          normalized == 'token.expired' ||
+          normalized == 'jwt.expired';
+    }
+
+    return false;
+  }
+
+  bool _isCredentialFailure(dynamic responseData) {
+    if (responseData is! Map) return false;
+
+    final rawError = responseData['error'];
+    final error = rawError is Map ? rawError : responseData;
+    final code = error['code']?.toString().toLowerCase() ?? '';
+
+    return code.startsWith('iam.credentials.') ||
+        code.contains('invalid_credentials') ||
+        code.contains('current_password_invalid');
+  }
+
+  Future<String?> _refreshToken() async {
+    final refreshToken = await _secureStorage.read(
+      key: StorageKeys.refreshToken,
+    );
+    if (refreshToken == null || refreshToken.isEmpty) return null;
+
+    try {
+      final headers = Map<String, dynamic>.from(_dio.options.headers)
+        ..remove('Authorization');
+      final refreshDio = Dio(_dio.options.copyWith(headers: headers));
+
+      Response<dynamic> response;
+      try {
+        response = await refreshDio.post<dynamic>(
+          refreshTokenEndpoint,
+          data: {'refreshToken': refreshToken},
         );
+      } on DioException catch (error) {
+        final statusCode = error.response?.statusCode ?? 500;
+        final shouldRetrySnakeCase = statusCode >= 400 && statusCode <= 422;
+        if (!shouldRetrySnakeCase) rethrow;
+        response = await refreshDio.post<dynamic>(
+          refreshTokenEndpoint,
+          data: {'refresh_token': refreshToken},
+        );
+      }
+
+      final statusCode = response.statusCode ?? 0;
+      if (statusCode < 200 || statusCode >= 300 || response.data is! Map) {
         return null;
       }
 
-      // Create a new Dio instance without interceptors to avoid infinite loop
-      final refreshDio = Dio(_dio.options);
-      // Remove any stale Authorization header — refresh endpoint is public
-      refreshDio.options.headers.remove('Authorization');
+      final raw = Map<String, dynamic>.from(response.data as Map);
+      final responseData = raw['data'] is Map
+          ? Map<String, dynamic>.from(raw['data'] as Map)
+          : raw;
+      final data = _tokenMapFrom(responseData);
+      final accessToken =
+          (data['accessToken'] ?? data['access_token'] ?? data['token'])
+              ?.toString()
+              .trim();
+      if (accessToken == null || accessToken.isEmpty) return null;
 
-      // Make refresh request (same body format as AuthRepoImpl)
-      final response = await refreshDio.post(
-        refreshTokenEndpoint,
-        data: {'refreshToken': refreshToken},
-      );
-
-      if (response.statusCode == 200 && response.data != null) {
-        final data = response.data as Map<String, dynamic>;
-        // Backend returns camelCase keys (accessToken / refreshToken)
-        final newAccessToken = data['accessToken'] ?? data['access_token'] ?? data['token'];
-        final newRefreshToken = data['refreshToken'] ?? data['refresh_token'];
-
-        // Update refresh token if provided (same key as AuthRepoImpl)
-        if (newRefreshToken != null) {
-          await _secureStorage.write(key: _kRefreshToken, value: newRefreshToken);
-        }
-
-        developer.log(
-          '✅ Token refreshed successfully',
-          name: 'RefreshTokenInterceptor',
+      final rotatedRefresh = data['refreshToken'] ?? data['refresh_token'];
+      if (rotatedRefresh != null && rotatedRefresh.toString().isNotEmpty) {
+        await _secureStorage.write(
+          key: StorageKeys.refreshToken,
+          value: rotatedRefresh.toString(),
         );
+      }
 
-        return newAccessToken;
+      final expiresIn = int.tryParse(data['expiresIn']?.toString() ?? '');
+      if (expiresIn != null && expiresIn > 0) {
+        await _secureStorage.write(
+          key: StorageKeys.tokenExpiry,
+          value: DateTime.now()
+              .add(Duration(seconds: expiresIn))
+              .toUtc()
+              .toIso8601String(),
+        );
       }
 
       developer.log(
-        '⚠️ Refresh response invalid: status=${response.statusCode} data=${response.data}',
+        'Token refreshed successfully',
         name: 'RefreshTokenInterceptor',
       );
-      return null;
-    } catch (e) {
+      return accessToken;
+    } catch (error) {
       developer.log(
-        '❌ Refresh token request failed: $e',
+        'Refresh token request failed: $error',
         name: 'RefreshTokenInterceptor',
       );
       return null;
     }
   }
 
-  /// Retry all queued requests with new token
-  Future<void> _retryQueuedRequests(String newToken) async {
-    for (final retry in _requestsQueue) {
+  Map<String, dynamic> _tokenMapFrom(Map<String, dynamic> json) {
+    for (final key in const ['tokens', 'auth', 'session']) {
+      final value = json[key];
+      if (value is Map) return Map<String, dynamic>.from(value);
+    }
+    return json;
+  }
+
+  Future<void> _retryQueuedRequests(String token) async {
+    final queued = List<_RequestRetry>.from(_requestsQueue);
+    _requestsQueue.clear();
+    for (final retry in queued) {
       try {
-        retry.options.headers['Authorization'] = 'Bearer $newToken';
-        final response = await _dio.fetch(retry.options);
-        retry.handler.resolve(response);
-      } catch (e) {
-        retry.handler.next(
-          DioException(
-            requestOptions: retry.options,
-            error: e,
-          ),
-        );
+        retry.options.headers['Authorization'] = 'Bearer $token';
+        retry.options.extra[_refreshRetryAttemptedKey] = true;
+        retry.handler.resolve(await _dio.fetch(retry.options));
+      } catch (_) {
+        retry.handler.next(retry.error);
       }
     }
-    _requestsQueue.clear();
   }
 
-  /// Handle refresh failure - clear tokens and notify
   Future<void> _handleRefreshFailure() async {
-    // Clear all tokens (same keys as AuthRepoImpl)
-    await _secureStorage.delete(key: _kAccessToken);
-    await _secureStorage.delete(key: _kRefreshToken);
-
-    // Clear queued requests
+    await _secureStorage.delete(key: StorageKeys.accessToken);
+    await _secureStorage.delete(key: StorageKeys.refreshToken);
+    await _secureStorage.delete(key: StorageKeys.tokenExpiry);
+    for (final retry in _requestsQueue) {
+      retry.handler.next(retry.error);
+    }
     _requestsQueue.clear();
-
-    // Notify callback (usually to navigate to login)
-    onRefreshFailed?.call();
+    await onRefreshFailed?.call();
   }
 }
 
-/// Helper class to queue requests during token refresh
 class _RequestRetry {
-  final RequestOptions options;
-  final ErrorInterceptorHandler handler;
+  const _RequestRetry(this.error, this.handler);
 
-  _RequestRetry(this.options, this.handler);
+  final DioException error;
+  final ErrorInterceptorHandler handler;
+  RequestOptions get options => error.requestOptions;
 }

@@ -63,11 +63,14 @@ class AppSideDrawer extends StatelessWidget {
     final canViewGates = _hasTarget(DismissalNavigationTarget.gates);
     final canViewHistory = permissions.has(AppPermission.viewHistory);
 
-    final hasAcademics = canViewCalls || canViewWaiting || canViewGates || canViewHistory;
+    final hasAcademics =
+        canViewCalls || canViewWaiting || canViewGates || canViewHistory;
 
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.65,
-      backgroundColor: const Color(0xFFF6F8FB), // Matching background light color
+      backgroundColor: const Color(
+        0xFFF6F8FB,
+      ), // Matching background light color
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(28),
@@ -101,21 +104,24 @@ class AppSideDrawer extends StatelessWidget {
                     context,
                     Iconsax.direct_notification,
                     l10n.drawerCallsBoard,
-                    onTap: () => _selectTab(context, DismissalNavigationTarget.calls),
+                    onTap: () =>
+                        _selectTab(context, DismissalNavigationTarget.calls),
                     visible: canViewCalls,
                   ),
                   _tile(
                     context,
                     Iconsax.profile_2user,
                     l10n.drawerWaiting,
-                    onTap: () => _selectTab(context, DismissalNavigationTarget.waiting),
+                    onTap: () =>
+                        _selectTab(context, DismissalNavigationTarget.waiting),
                     visible: canViewWaiting,
                   ),
                   _tile(
                     context,
                     Iconsax.location_tick,
                     l10n.drawerGates,
-                    onTap: () => _selectTab(context, DismissalNavigationTarget.gates),
+                    onTap: () =>
+                        _selectTab(context, DismissalNavigationTarget.gates),
                     visible: canViewGates,
                   ),
                   _tile(
@@ -149,13 +155,11 @@ class AppSideDrawer extends StatelessWidget {
                   _tile(
                     context,
                     Icons.lock_outline_rounded,
-                    _drawerText(context, 'تغيير كلمة المرور', 'Change password'),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  _tile(
-                    context,
-                    Icons.notifications_off_outlined,
-                    _drawerText(context, 'إعدادات الإشعارات', 'Notification settings'),
+                    _drawerText(
+                      context,
+                      'تغيير كلمة المرور',
+                      'Change password',
+                    ),
                     onTap: () => Navigator.pop(context),
                   ),
                   _tile(
@@ -178,20 +182,8 @@ class AppSideDrawer extends StatelessWidget {
                   ),
                   _tile(
                     context,
-                    Icons.headset_mic_outlined,
-                    _drawerText(context, 'الدعم الفني', 'Support'),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  _tile(
-                    context,
                     Iconsax.message_question,
                     l10n.drawerHelp,
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  _tile(
-                    context,
-                    Icons.email_outlined,
-                    _drawerText(context, 'تواصل معنا', 'Contact us'),
                     onTap: () => Navigator.pop(context),
                   ),
                   _tile(
@@ -213,7 +205,11 @@ class AppSideDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n, DismissalAuthSession? session) {
+  Widget _buildHeader(
+    BuildContext context,
+    AppLocalizations l10n,
+    DismissalAuthSession? session,
+  ) {
     final topPadding = MediaQuery.of(context).padding.top;
     final displayName = session?.displayName ?? '';
     final role = session?.userType ?? '';
@@ -495,9 +491,7 @@ class AppSideDrawer extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         border: Border(
-          top: BorderSide(
-            color: AppColors.primary.withValues(alpha: 0.08),
-          ),
+          top: BorderSide(color: AppColors.primary.withValues(alpha: 0.08)),
         ),
       ),
       child: Column(

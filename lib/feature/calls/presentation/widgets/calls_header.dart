@@ -6,6 +6,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../generated/app_localizations.dart';
+import '../../../notifications/presentation/widgets/dismissal_notification_bell_button.dart';
 
 class CallsHeader extends StatelessWidget {
   const CallsHeader({
@@ -83,6 +84,8 @@ class CallsHeader extends StatelessWidget {
                           ],
                         ),
                       ),
+                      const DismissalNotificationBellButton(onDark: true),
+                      AppSpacing.horizontalSpaceSm,
                       _LiveBadge(count: activeCount),
                     ],
                   ),

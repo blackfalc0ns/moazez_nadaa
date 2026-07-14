@@ -1,4 +1,4 @@
-package com.example.ndaaa_chat
+package sa.moazez.nedaa
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -39,6 +39,9 @@ class AppColors {
   static const Color surfaceLight = Colors.white;
   static const Color onSurfaceLight = Color(0xFF212121);
   static const Color inputBackgroundLight = Color(0xFFF5F5F5);
+  static const Color background = backgroundLight;
+  static const Color cardBackground = surfaceLight;
+  static const Color surfaceVariant = Color(0xFFE0E0E0);
 
   // Background colors - Dark
   static const Color backgroundDark = Color(0xFF121212);
@@ -50,6 +53,8 @@ class AppColors {
   // Text colors - Light
   static const Color textPrimaryLight = Color(0xFF212121);
   static const Color textSecondaryLight = Color(0xFF757575);
+  static const Color textPrimary = textPrimaryLight;
+  static const Color textSecondary = textSecondaryLight;
 
   static const Color hintLight = Color(0xFF9E9E9E);
 

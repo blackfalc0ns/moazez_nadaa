@@ -70,15 +70,12 @@ class DismissalRepo {
     return _get(
       ApiEndpoints.dismissalRequestHistory,
       DismissalMapper.queuePageFromJson,
-      queryParameters: {
-        ..._queueQuery(
-          status: status,
-          gateId: gateId,
-          page: page,
-          limit: limit,
-        ),
-        'sort': 'requested_at_desc',
-      },
+      queryParameters: _queueQuery(
+        status: status,
+        gateId: gateId,
+        page: page,
+        limit: limit,
+      ),
     );
   }
 

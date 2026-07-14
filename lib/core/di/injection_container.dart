@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -6,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../feature/dismissal/data/di/dismissal_di.dart';
 import '../../feature/auth/data/di/dismissal_auth_di.dart';
+import '../../feature/notifications/data/di/dismissal_notifications_di.dart';
 import '../api/api_client.dart';
 import '../api/api_service.dart';
 import '../config/environment.dart';
@@ -63,9 +67,40 @@ Future<void> initDI() async {
     RefreshTokenInterceptor(
       dio: apiClient.dio,
       secureStorage: secureStorage,
-      onRefreshFailed: () {
+      onTokenRefreshed: (newToken) async {
+        apiClient.setAuthToken(newToken);
+        try {
+          final rawSession = sharedPreferences.getString(StorageKeys.userData);
+          if (rawSession != null && rawSession.isNotEmpty) {
+            final sessionMap = Map<String, dynamic>.from(
+              jsonDecode(rawSession) as Map,
+            );
+            sessionMap['accessToken'] = newToken;
+
+            final rotatedRefresh = await secureStorage.read(
+              key: StorageKeys.refreshToken,
+            );
+            if (rotatedRefresh != null && rotatedRefresh.isNotEmpty) {
+              sessionMap['refreshToken'] = rotatedRefresh;
+            }
+
+            await sharedPreferences.setString(
+              StorageKeys.userData,
+              jsonEncode(sessionMap),
+            );
+          }
+        } catch (error) {
+          developer.log(
+            'Error updating dismissal session after token refresh: $error',
+            name: 'DismissalAuth',
+          );
+        }
+        await RealtimeService.instance.forceReconnect();
+      },
+      onRefreshFailed: () async {
         apiClient.clearAuthToken();
-        permissionRepository.clear();
+        await sharedPreferences.remove(StorageKeys.userData);
+        await permissionRepository.clear();
         RealtimeService.instance.disconnect();
         GlobalNavigator.navigateToLogin();
       },
@@ -91,5 +126,6 @@ Future<void> initDI() async {
   sl.registerLazySingleton<RealtimeService>(() => RealtimeService.instance);
 
   DismissalDI.init(sl);
+  DismissalNotificationsDI.init(sl);
   DismissalAuthDI.init(sl);
 }

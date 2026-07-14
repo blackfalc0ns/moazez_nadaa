@@ -284,6 +284,9 @@ class _SearchAndStatusBar extends StatelessWidget {
           textInputAction: TextInputAction.search,
           decoration: InputDecoration(
             hintText: l10n.dismissalSearchHint,
+            hintStyle: AppTypography.bodySmall.copyWith(
+              color: AppColors.textSecondaryLight,
+            ),
             prefixIcon: const Icon(Iconsax.search_normal_1),
             filled: true,
             fillColor: Colors.white,
@@ -392,7 +395,7 @@ class _EmptyRequestsState extends StatelessWidget {
           AppSpacing.verticalSpaceSm,
           Text(
             l10n.dismissalNoActiveRequests,
-            style: AppTypography.heading5.copyWith(
+            style: AppTypography.heading6.copyWith(
               color: AppColors.primaryDeep,
               fontWeight: FontWeight.w700,
             ),
@@ -401,7 +404,8 @@ class _EmptyRequestsState extends StatelessWidget {
           Text(
             l10n.dismissalNoActiveRequestsBody,
             textAlign: TextAlign.center,
-            style: AppTypography.bodySmall.copyWith(
+
+            style: AppTypography.labelSmall.copyWith(
               color: AppColors.textSecondaryLight,
               fontWeight: FontWeight.w700,
             ),

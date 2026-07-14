@@ -30,7 +30,7 @@ class WaitingStudentsEmptyState extends StatelessWidget {
           AppSpacing.verticalSpaceMd,
           Text(
             l10n.dismissalNoWaitingStudents,
-            style: AppTypography.heading5.copyWith(
+            style: AppTypography.heading6.copyWith(
               color: AppColors.primaryDeep,
               fontWeight: FontWeight.w700,
             ),
@@ -39,7 +39,7 @@ class WaitingStudentsEmptyState extends StatelessWidget {
           Text(
             l10n.dismissalNoWaitingStudentsBody,
             textAlign: TextAlign.center,
-            style: AppTypography.bodySmall.copyWith(
+            style: AppTypography.labelSmall.copyWith(
               color: AppColors.textSecondaryLight,
             ),
           ),

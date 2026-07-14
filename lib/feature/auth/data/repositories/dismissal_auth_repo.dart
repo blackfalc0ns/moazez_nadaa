@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,6 +13,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/errors/failures/typed_failure.dart';
 import '../../../../core/permissions/permission_repository.dart';
 import '../../../../core/realtime/realtime_service.dart';
+import '../../../../core/services/notifications/push_token_lifecycle.dart';
 import '../mappers/dismissal_auth_mapper.dart';
 import '../models/dismissal_auth_session.dart';
 
@@ -128,6 +130,9 @@ class DismissalAuthRepo {
   }
 
   Future<void> clearLocalSession() async {
+    if (sl.isRegistered<PushTokenLifecycle>()) {
+      await sl<PushTokenLifecycle>().unregisterCurrentDevice();
+    }
     _apiClient.clearAuthToken();
     if (sl.isRegistered<RealtimeService>()) {
       sl<RealtimeService>().disconnect();
@@ -161,6 +166,9 @@ class DismissalAuthRepo {
     }
     if (sl.isRegistered<RealtimeService>()) {
       await sl<RealtimeService>().connect();
+    }
+    if (sl.isRegistered<PushTokenLifecycle>()) {
+      unawaited(sl<PushTokenLifecycle>().ensureRegistered());
     }
   }
 

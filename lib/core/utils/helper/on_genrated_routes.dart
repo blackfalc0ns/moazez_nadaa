@@ -5,7 +5,7 @@ import '../../../feature/calls/presentation/pages/calls_history_page.dart';
 import '../../../feature/calls/presentation/pages/dismissal_request_details_page.dart';
 import '../../../feature/gates_duties/presentation/pages/gates_duties_page.dart';
 import '../../../feature/main/presentation/pages/main_navigation_page.dart';
-import '../../../feature/notifications/presentation/pages/notifications_page.dart';
+import '../../../feature/notifications/presentation/pages/dismissal_notifications_screen.dart';
 import '../../../feature/onboarding/presentation/pages/onboarding_page.dart';
 import '../../../feature/profile/presentation/pages/profile_page.dart';
 import '../../../feature/settings/presentation/pages/settings_page.dart';
@@ -96,7 +96,7 @@ class OnGeneratedRoutes {
         return _protectedRoute(
           settings,
           AppPermission.viewNotifications,
-          const NotificationsPage(),
+          const DismissalNotificationsScreen(),
         );
       case Routes.settings:
         return MaterialPageRoute<void>(
