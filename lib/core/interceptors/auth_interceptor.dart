@@ -18,6 +18,7 @@ class AuthInterceptor extends Interceptor {
   ) async {
     // Skip auth for public endpoints
     if (_isPublicEndpoint(options.path)) {
+      options.headers.remove('Authorization');
       return handler.next(options);
     }
 
@@ -40,6 +41,7 @@ class AuthInterceptor extends Interceptor {
       '/auth/forgot-password',
       '/auth/reset-password',
       '/auth/verify-email',
+      '/auth/refresh',
       '/health',
       '/version',
     ];

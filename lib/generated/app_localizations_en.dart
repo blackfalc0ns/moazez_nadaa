@@ -9,6 +9,19 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get exit_dialog_title => 'Exit Application';
+
+  @override
+  String get exit_dialog_description =>
+      'Are you sure you want to close the application?';
+
+  @override
+  String get exit_dialog_cancel => 'Cancel';
+
+  @override
+  String get exit_dialog_confirm => 'Exit';
+
+  @override
   String get error_no_internet_connection => 'No internet connection';
 
   @override

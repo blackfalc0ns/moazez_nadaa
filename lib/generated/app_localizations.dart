@@ -98,6 +98,30 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
+  /// No description provided for @exit_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Application'**
+  String get exit_dialog_title;
+
+  /// No description provided for @exit_dialog_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to close the application?'**
+  String get exit_dialog_description;
+
+  /// No description provided for @exit_dialog_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get exit_dialog_cancel;
+
+  /// No description provided for @exit_dialog_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exit_dialog_confirm;
+
   /// No description provided for @error_no_internet_connection.
   ///
   /// In en, this message translates to:

@@ -222,7 +222,7 @@ class _DismissalLoginPageState extends State<DismissalLoginPage> {
                                 ? l10n.authPasswordInvalid
                                 : null,
                           ),
-                          AppSpacing.verticalSpaceLg,
+                          AppSpacing.verticalSpaceSm,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -258,6 +258,7 @@ class _DismissalLoginPageState extends State<DismissalLoginPage> {
                             child: CustomButton(
                               text: l10n.authLoginButton,
                               isLoading: false,
+                              height: 45,
                               onPressed: isLoading
                                   ? null
                                   : () => _submit(context),
@@ -303,8 +304,6 @@ class _LoginLoadingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: LogoShimmerLoader(size: 92),
-    );
+    return const Center(child: LogoShimmerLoader(size: 92));
   }
 }

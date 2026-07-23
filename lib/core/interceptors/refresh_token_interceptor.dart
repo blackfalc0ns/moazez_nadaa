@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../constants/storage_keys.dart';
 
-/// Refreshes expired access tokens and queues concurrent 401 requests.
+/// Refreshes an invalid access token once for all concurrent 401 requests.
 class RefreshTokenInterceptor extends Interceptor {
   RefreshTokenInterceptor({
     required Dio dio,
@@ -23,209 +24,228 @@ class RefreshTokenInterceptor extends Interceptor {
   final FutureOr<void> Function()? onRefreshFailed;
   final FutureOr<void> Function(String token)? onTokenRefreshed;
 
-  static const _refreshRetryAttemptedKey = 'refresh_retry_attempted';
-
-  bool _isRefreshing = false;
-  final List<_RequestRetry> _requestsQueue = [];
+  static const _retryMarker = 'auth_refresh_retried';
+  Future<String?>? _refreshFuture;
+  Future<void>? _refreshFailureFuture;
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    developer.log(
-      'onError fired: ${err.response?.statusCode} ${err.requestOptions.path}',
-      name: 'RefreshTokenInterceptor',
-    );
-
-    if (!_shouldRefresh(err)) return handler.next(err);
-
-    if (err.requestOptions.path.contains(refreshTokenEndpoint)) {
-      await _handleRefreshFailure();
-      return handler.next(err);
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    final status = response.statusCode ?? 0;
+    if (status >= 200 &&
+        status < 300 &&
+        response.requestOptions.path.contains('/auth/login')) {
+      _refreshFailureFuture = null;
     }
+    handler.next(response);
+  }
 
-    if (_isRefreshing) {
-      _requestsQueue.add(_RequestRetry(err, handler));
+  @override
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (err.response?.statusCode != 401) {
+      handler.next(err);
       return;
     }
 
-    _isRefreshing = true;
+    final options = err.requestOptions;
+    if (_isRefreshRequest(options.path) ||
+        options.extra[_retryMarker] == true) {
+      await _handleRefreshFailureOnce();
+      handler.next(err);
+      return;
+    }
+
+    final token = await _refreshAccessTokenOnce();
+    if (token == null) {
+      handler.next(err);
+      return;
+    }
+
     try {
-      final newToken = await _refreshToken();
-      if (newToken == null) {
-        await _handleRefreshFailure();
-        return handler.next(err);
-      }
-
-      await _secureStorage.write(key: StorageKeys.accessToken, value: newToken);
-      await onTokenRefreshed?.call(newToken);
-
-      err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
-      err.requestOptions.extra[_refreshRetryAttemptedKey] = true;
-      final response = await _dio.fetch(err.requestOptions);
-      await _retryQueuedRequests(newToken);
-      return handler.resolve(response);
-    } catch (error) {
-      developer.log(
-        'Token refresh failed: $error',
-        name: 'RefreshTokenInterceptor',
+      options.headers['Authorization'] = 'Bearer $token';
+      options.extra[_retryMarker] = true;
+      handler.resolve(await _dio.fetch<dynamic>(options));
+    } on DioException catch (retryError) {
+      handler.next(retryError);
+    } catch (error, stackTrace) {
+      handler.next(
+        DioException(
+          requestOptions: options,
+          error: error,
+          stackTrace: stackTrace,
+        ),
       );
-      await _handleRefreshFailure();
-      return handler.next(err);
-    } finally {
-      _isRefreshing = false;
     }
   }
 
-  bool _shouldRefresh(DioException err) {
-    if (err.requestOptions.extra[_refreshRetryAttemptedKey] == true) {
-      return false;
-    }
+  bool _isRefreshRequest(String path) => path.contains(refreshTokenEndpoint);
 
-    if (_isCredentialFailure(err.response?.data)) {
-      return false;
-    }
-
-    final statusCode = err.response?.statusCode;
-    if (statusCode == 401) return true;
-
-    final data = err.response?.data;
-    if (data is Map) {
-      final error = data['error'];
-      final code = error is Map ? error['code'] : data['code'];
-      final normalized = code?.toString().trim().toLowerCase();
-      return normalized == 'auth.token.expired' ||
-          normalized == 'token.expired' ||
-          normalized == 'jwt.expired';
-    }
-
-    return false;
+  Future<String?> _refreshAccessTokenOnce() {
+    final active = _refreshFuture;
+    if (active != null) return active;
+    late final Future<String?> refresh;
+    refresh = _refreshAndPersist().whenComplete(() {
+      if (identical(_refreshFuture, refresh)) _refreshFuture = null;
+    });
+    _refreshFuture = refresh;
+    return refresh;
   }
 
-  bool _isCredentialFailure(dynamic responseData) {
-    if (responseData is! Map) return false;
-
-    final rawError = responseData['error'];
-    final error = rawError is Map ? rawError : responseData;
-    final code = error['code']?.toString().toLowerCase() ?? '';
-
-    return code.startsWith('iam.credentials.') ||
-        code.contains('invalid_credentials') ||
-        code.contains('current_password_invalid');
-  }
-
-  Future<String?> _refreshToken() async {
-    final refreshToken = await _secureStorage.read(
-      key: StorageKeys.refreshToken,
-    );
-    if (refreshToken == null || refreshToken.isEmpty) return null;
-
+  Future<String?> _refreshAndPersist() async {
     try {
-      final headers = Map<String, dynamic>.from(_dio.options.headers)
-        ..remove('Authorization');
-      final refreshDio = Dio(_dio.options.copyWith(headers: headers));
-
-      Response<dynamic> response;
-      try {
-        response = await refreshDio.post<dynamic>(
-          refreshTokenEndpoint,
-          data: {'refreshToken': refreshToken},
-        );
-      } on DioException catch (error) {
-        final statusCode = error.response?.statusCode ?? 500;
-        final shouldRetrySnakeCase = statusCode >= 400 && statusCode <= 422;
-        if (!shouldRetrySnakeCase) rethrow;
-        response = await refreshDio.post<dynamic>(
-          refreshTokenEndpoint,
-          data: {'refresh_token': refreshToken},
-        );
-      }
-
-      final statusCode = response.statusCode ?? 0;
-      if (statusCode < 200 || statusCode >= 300 || response.data is! Map) {
+      final refreshToken = (await _secureStorage.read(
+        key: StorageKeys.refreshToken,
+      ))?.trim();
+      if (refreshToken == null || refreshToken.isEmpty) {
+        await _handleRefreshFailureOnce();
         return null;
       }
 
-      final raw = Map<String, dynamic>.from(response.data as Map);
-      final responseData = raw['data'] is Map
-          ? Map<String, dynamic>.from(raw['data'] as Map)
-          : raw;
-      final data = _tokenMapFrom(responseData);
+      final response = await _dio.post<dynamic>(
+        refreshTokenEndpoint,
+        data: {'refreshToken': refreshToken},
+        options: Options(extra: const {'is_token_refresh': true}),
+      );
+      final data = _readResponseData(response.data);
       final accessToken =
           (data['accessToken'] ?? data['access_token'] ?? data['token'])
               ?.toString()
               .trim();
-      if (accessToken == null || accessToken.isEmpty) return null;
+      if (response.statusCode != 200 ||
+          accessToken == null ||
+          accessToken.isEmpty) {
+        await _handleRefreshFailureOnce();
+        return null;
+      }
 
-      final rotatedRefresh = data['refreshToken'] ?? data['refresh_token'];
-      if (rotatedRefresh != null && rotatedRefresh.toString().isNotEmpty) {
+      await _secureStorage.write(
+        key: StorageKeys.accessToken,
+        value: accessToken,
+      );
+      final rotated = (data['refreshToken'] ?? data['refresh_token'])
+          ?.toString()
+          .trim();
+      if (rotated != null && rotated.isNotEmpty) {
         await _secureStorage.write(
           key: StorageKeys.refreshToken,
-          value: rotatedRefresh.toString(),
+          value: rotated,
         );
       }
-
-      final expiresIn = int.tryParse(data['expiresIn']?.toString() ?? '');
-      if (expiresIn != null && expiresIn > 0) {
+      final expiry = _readExpiry(accessToken, data);
+      if (expiry != null) {
         await _secureStorage.write(
           key: StorageKeys.tokenExpiry,
-          value: DateTime.now()
-              .add(Duration(seconds: expiresIn))
-              .toUtc()
-              .toIso8601String(),
+          value: expiry.toIso8601String(),
         );
       }
 
-      developer.log(
-        'Token refreshed successfully',
-        name: 'RefreshTokenInterceptor',
-      );
+      _refreshFailureFuture = null;
+      await _notifyTokenRefreshed(accessToken);
       return accessToken;
-    } catch (error) {
+    } catch (error, stackTrace) {
       developer.log(
-        'Refresh token request failed: $error',
+        'Refresh request failed',
         name: 'RefreshTokenInterceptor',
+        error: error,
+        stackTrace: stackTrace,
       );
+      final alreadyHandled =
+          error is DioException && _isRefreshRequest(error.requestOptions.path);
+      if (!alreadyHandled) await _handleRefreshFailureOnce();
       return null;
     }
   }
 
-  Map<String, dynamic> _tokenMapFrom(Map<String, dynamic> json) {
-    for (final key in const ['tokens', 'auth', 'session']) {
-      final value = json[key];
-      if (value is Map) return Map<String, dynamic>.from(value);
+  Map<String, dynamic> _readResponseData(dynamic raw) {
+    if (raw is! Map) return const {};
+    final root = Map<String, dynamic>.from(raw);
+    final nested = root['data'];
+    if (nested is Map &&
+        root['accessToken'] == null &&
+        root['access_token'] == null &&
+        root['token'] == null) {
+      return Map<String, dynamic>.from(nested);
     }
-    return json;
+    return root;
   }
 
-  Future<void> _retryQueuedRequests(String token) async {
-    final queued = List<_RequestRetry>.from(_requestsQueue);
-    _requestsQueue.clear();
-    for (final retry in queued) {
-      try {
-        retry.options.headers['Authorization'] = 'Bearer $token';
-        retry.options.extra[_refreshRetryAttemptedKey] = true;
-        retry.handler.resolve(await _dio.fetch(retry.options));
-      } catch (_) {
-        retry.handler.next(retry.error);
-      }
+  DateTime? _readExpiry(String token, Map<String, dynamic> data) {
+    final jwtExpiry = _getJwtExpiry(token);
+    if (jwtExpiry != null) return jwtExpiry;
+    final expiresIn = int.tryParse(
+      (data['expiresIn'] ?? data['expires_in'])?.toString() ?? '',
+    );
+    if (expiresIn == null || expiresIn <= 0) return null;
+    return DateTime.now().add(Duration(seconds: expiresIn)).toUtc();
+  }
+
+  Future<void> _notifyTokenRefreshed(String token) async {
+    try {
+      await onTokenRefreshed?.call(token);
+    } catch (error, stackTrace) {
+      developer.log(
+        'Post-refresh callback failed; token remains valid',
+        name: 'RefreshTokenInterceptor',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
-  Future<void> _handleRefreshFailure() async {
-    await _secureStorage.delete(key: StorageKeys.accessToken);
-    await _secureStorage.delete(key: StorageKeys.refreshToken);
-    await _secureStorage.delete(key: StorageKeys.tokenExpiry);
-    for (final retry in _requestsQueue) {
-      retry.handler.next(retry.error);
-    }
-    _requestsQueue.clear();
-    await onRefreshFailed?.call();
+  Future<void> _handleRefreshFailureOnce() {
+    final active = _refreshFailureFuture;
+    if (active != null) return active;
+    final failure = _clearInvalidSession();
+    _refreshFailureFuture = failure;
+    return failure;
   }
-}
 
-class _RequestRetry {
-  const _RequestRetry(this.error, this.handler);
+  Future<void> _clearInvalidSession() async {
+    try {
+      await Future.wait([
+        _secureStorage.delete(key: StorageKeys.accessToken),
+        _secureStorage.delete(key: StorageKeys.refreshToken),
+        _secureStorage.delete(key: StorageKeys.tokenExpiry),
+      ]);
+    } catch (error, stackTrace) {
+      developer.log(
+        'Failed to clear invalid session',
+        name: 'RefreshTokenInterceptor',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+    try {
+      await onRefreshFailed?.call();
+    } catch (error, stackTrace) {
+      developer.log(
+        'Refresh failure callback failed',
+        name: 'RefreshTokenInterceptor',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
 
-  final DioException error;
-  final ErrorInterceptorHandler handler;
-  RequestOptions get options => error.requestOptions;
+  DateTime? _getJwtExpiry(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return null;
+      final payload =
+          jsonDecode(
+                utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
+              )
+              as Map<String, dynamic>;
+      final exp = payload['exp'];
+      if (exp is! num) return null;
+      return DateTime.fromMillisecondsSinceEpoch(
+        exp.toInt() * 1000,
+        isUtc: true,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 }

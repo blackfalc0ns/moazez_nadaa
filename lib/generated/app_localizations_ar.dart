@@ -9,6 +9,19 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get exit_dialog_title => 'الخروج من التطبيق';
+
+  @override
+  String get exit_dialog_description =>
+      'هل أنت متأكد من رغبتك في إغلاق التطبيق؟';
+
+  @override
+  String get exit_dialog_cancel => 'إلغاء';
+
+  @override
+  String get exit_dialog_confirm => 'خروج';
+
+  @override
   String get error_no_internet_connection => 'لا يوجد اتصال بالإنترنت';
 
   @override

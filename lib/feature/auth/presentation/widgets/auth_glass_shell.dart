@@ -141,7 +141,7 @@ class _AuthGlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadius.radiusXXL + 4), // 36
+      borderRadius: BorderRadius.circular(AppRadius.radiusXL + 4),
       child: Stack(
         children: [
           // Blur Effect
@@ -158,9 +158,7 @@ class _AuthGlassCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.50),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.68)),
-                borderRadius: BorderRadius.circular(
-                  AppRadius.radiusXXL + 4,
-                ), // 36
+                borderRadius: BorderRadius.circular(AppRadius.radiusXL + 4),
                 boxShadow: AppShadows.xl,
               ),
             ),
@@ -183,8 +181,8 @@ class _AuthGlassCard extends StatelessWidget {
                   filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                   child: SvgPicture.asset(
                     'assets/images/logo.svg',
-                    width: 60,
-                    height: 60,
+                    width: 48,
+                    height: 48,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -195,14 +193,15 @@ class _AuthGlassCard extends StatelessWidget {
                   color: AppColors.grey.withValues(alpha: 0.2),
                   thickness: 1,
                 ),
-                AppSpacing.verticalSpaceLg,
+                AppSpacing.verticalSpaceSm,
 
                 // Title
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: AppTypography.heading3.copyWith(
+                  style: AppTypography.heading5.copyWith(
                     color: AppColors.primaryDeep,
+                    fontSize: 18,
                   ),
                 ),
                 AppSpacing.verticalSpaceXs,
@@ -216,7 +215,8 @@ class _AuthGlassCard extends StatelessWidget {
                     subtitle,
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.textSecondaryLight,
+                      color: AppColors.textPrimaryLight,
+                      fontSize: 12,
                     ),
                   ),
                 ),
