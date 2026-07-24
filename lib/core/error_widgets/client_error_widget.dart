@@ -2,6 +2,7 @@ import 'package:ndaaa_chat/core/errors/api_error_type.dart';
 import 'package:ndaaa_chat/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'base_error_widget.dart';
+import '../errors/error_message_mapper.dart';
 
 class ClientErrorWidget extends BaseErrorWidget {
   final ApiErrorType clientErrorType;
@@ -176,13 +177,18 @@ class ClientErrorWidget extends BaseErrorWidget {
     }
 
     // لا تعرض رسالة الـ server إذا كانت تحتوي على تفاصيل تقنية
-    final finalDescription =
-        (serverMessage != null &&
+    final safeServerMessage =
+        serverMessage != null &&
             serverMessage!.isNotEmpty &&
             !_isTechnicalMessage(serverMessage) &&
-            serverMessage!.length < 150)
-        ? serverMessage!
-        : description;
+            serverMessage!.length < 150
+        ? serverMessage
+        : null;
+    final finalDescription = ErrorMessageMapper.toLocalized(
+      context,
+      safeServerMessage,
+      defaultMessage: description,
+    );
 
     return BaseErrorWidget(
       title: title, // لا تعرض status code للمستخدم

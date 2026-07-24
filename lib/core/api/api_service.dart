@@ -27,10 +27,7 @@ class ApiService {
       } else {
         parsedData = data as T;
       }
-      return ApiResponse.success(
-        data: parsedData,
-        statusCode: statusCode,
-      );
+      return ApiResponse.success(data: parsedData, statusCode: statusCode);
     } else {
       final failure = TypedFailureFactory.fromStatusCode(
         statusCode ?? 500,
@@ -48,12 +45,28 @@ class ApiService {
       // ✅ Check for nested error object first (API standard format)
       if (data['error'] != null && data['error'] is Map) {
         final error = data['error'] as Map;
-        return error['message'] ?? error['msg'];
+        return _sanitizeErrorMessage(error['message'] ?? error['msg']);
       }
       // Fallback to root level message
-      return data['message'] ?? data['error'] ?? data['msg'];
+      return _sanitizeErrorMessage(
+        data['message'] ?? data['error'] ?? data['msg'],
+      );
     }
-    return data.toString();
+    return _sanitizeErrorMessage(data);
+  }
+
+  String? _sanitizeErrorMessage(dynamic value) {
+    if (value == null || value is Map || value is Iterable) return null;
+    final message = value.toString().trim();
+    if (message.isEmpty || message.length > 500) return null;
+    final lower = message.toLowerCase();
+    if (lower.contains('<!doctype') ||
+        lower.contains('<html') ||
+        lower.contains('<body') ||
+        lower.contains('</html>')) {
+      return null;
+    }
+    return message;
   }
 
   /// Handle Dio exception and convert to TypedFailure
@@ -62,27 +75,16 @@ class ApiService {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        // ✅ For network errors, use fallback message (no API response)
-        return const TimeoutFailure(
-          message: 'انتهت مهلة الاتصال',
-          metadata: {},
-        );
+        return TimeoutFailure(metadata: {'exception': e.toString()});
       case DioExceptionType.connectionError:
-        // ✅ For network errors, use fallback message (no API response)
-        return const NetworkFailure(
-          message: 'لا يوجد اتصال بالإنترنت',
-          metadata: {},
-        );
+        return NetworkFailure(metadata: {'exception': e.toString()});
       case DioExceptionType.badResponse:
         return _handleBadResponse(e.response);
       case DioExceptionType.cancel:
-        return const UnknownFailure(message: 'تم إلغاء الطلب');
+        return const UnknownFailure(metadata: {'reason': 'cancelled'});
       case DioExceptionType.unknown:
       default:
-        return UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        );
+        return UnknownFailure(metadata: {'exception': e.toString()});
     }
   }
 
@@ -92,7 +94,7 @@ class ApiService {
     final data = response?.data;
 
     if (statusCode == null) {
-      return const ServerFailureTyped(message: 'لم يتم الحصول على رد من الخادم');
+      return const ServerFailureTyped();
     }
 
     // Extract API message (may be English; ErrorMessageMapper will localize it)
@@ -129,10 +131,7 @@ class ApiService {
       return ApiResponse.failure(failure: failure);
     } catch (e) {
       return ApiResponse.failure(
-        failure: UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        ),
+        failure: UnknownFailure(metadata: {'exception': e.toString()}),
       );
     }
   }
@@ -160,10 +159,7 @@ class ApiService {
       return ApiResponse.failure(failure: failure);
     } catch (e) {
       return ApiResponse.failure(
-        failure: UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        ),
+        failure: UnknownFailure(metadata: {'exception': e.toString()}),
       );
     }
   }
@@ -191,10 +187,7 @@ class ApiService {
       return ApiResponse.failure(failure: failure);
     } catch (e) {
       return ApiResponse.failure(
-        failure: UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        ),
+        failure: UnknownFailure(metadata: {'exception': e.toString()}),
       );
     }
   }
@@ -222,10 +215,7 @@ class ApiService {
       return ApiResponse.failure(failure: failure);
     } catch (e) {
       return ApiResponse.failure(
-        failure: UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        ),
+        failure: UnknownFailure(metadata: {'exception': e.toString()}),
       );
     }
   }
@@ -253,10 +243,7 @@ class ApiService {
       return ApiResponse.failure(failure: failure);
     } catch (e) {
       return ApiResponse.failure(
-        failure: UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        ),
+        failure: UnknownFailure(metadata: {'exception': e.toString()}),
       );
     }
   }
@@ -284,10 +271,7 @@ class ApiService {
       return ApiResponse.failure(failure: failure);
     } catch (e) {
       return ApiResponse.failure(
-        failure: UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        ),
+        failure: UnknownFailure(metadata: {'exception': e.toString()}),
       );
     }
   }
@@ -316,17 +300,16 @@ class ApiService {
       return ApiResponse.failure(failure: failure);
     } catch (e) {
       return ApiResponse.failure(
-        failure: UnknownFailure(
-          message: 'حدث خطأ غير متوقع',
-          metadata: {'exception': e.toString()},
-        ),
+        failure: UnknownFailure(metadata: {'exception': e.toString()}),
       );
     }
   }
 
   /// Set auth token for all requests
   void setAuthToken(String token) {
-    _dio.options.headers['Authorization'] = ApiConfig.authorizationHeader(token);
+    _dio.options.headers['Authorization'] = ApiConfig.authorizationHeader(
+      token,
+    );
   }
 
   /// Clear auth token

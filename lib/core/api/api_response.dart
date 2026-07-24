@@ -78,7 +78,7 @@ class ApiResponse<T> {
   String? get errorCode => failure?.type.name;
 
   /// Get data or throw if null
-  T get orThrow => data ?? (throw Exception('No data available'));
+  T get orThrow => data ?? (throw const MissingApiResponseDataException());
 
   /// Get data with default fallback
   T orDefault(T defaultValue) => data ?? defaultValue;
@@ -86,7 +86,7 @@ class ApiResponse<T> {
   /// Helper method to require data (throws if null)
   T requireData() {
     if (data == null) {
-      throw Exception(failure?.message ?? 'No data available');
+      throw const MissingApiResponseDataException();
     }
     return data!;
   }
@@ -222,4 +222,10 @@ class PaginatedApiResponse<T> extends ApiResponse<List<T>> {
       statusCode: statusCode,
     );
   }
+}
+
+/// Signals a malformed successful response without leaking UI copy from the
+/// data layer. Presentation code maps it to a localized unknown error.
+class MissingApiResponseDataException implements Exception {
+  const MissingApiResponseDataException();
 }

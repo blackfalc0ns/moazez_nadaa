@@ -26,6 +26,7 @@ class BaseErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
@@ -54,7 +55,7 @@ class BaseErrorWidget extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                title.isEmpty ? 'Error' : title,
+                title.isEmpty ? l10n.error_unknown : title,
                 style: textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryDeep,
@@ -97,10 +98,6 @@ class BaseErrorWidget extends StatelessWidget {
   }
 
   String getRetryButtonText(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n != null && l10n.retry.isNotEmpty) {
-      return l10n.retry;
-    }
-    return 'إعادة المحاولة'; // Fallback to Arabic 'Retry'
+    return AppLocalizations.of(context)!.retry;
   }
 }

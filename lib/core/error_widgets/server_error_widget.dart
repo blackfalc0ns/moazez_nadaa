@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'base_error_widget.dart';
+import '../errors/error_message_mapper.dart';
 import 'package:ndaaa_chat/core/errors/api_error_type.dart';
 import 'package:ndaaa_chat/generated/app_localizations.dart';
 
@@ -63,7 +64,7 @@ class ServerErrorWidget extends BaseErrorWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     String title;
     String description;
@@ -71,40 +72,45 @@ class ServerErrorWidget extends BaseErrorWidget {
 
     switch (serverErrorType) {
       case ApiErrorType.internalServerError:
-        title = l10n?.error_internal_server_error ?? '';
-        description = l10n?.error_internal_server_error_desc ?? '';
+        title = l10n.error_internal_server_error;
+        description = l10n.error_internal_server_error_desc;
         iconData = Icons.dns;
         break;
       case ApiErrorType.badGateway:
-        title = l10n?.error_bad_gateway ?? '';
-        description = l10n?.error_bad_gateway_desc ?? '';
+        title = l10n.error_bad_gateway;
+        description = l10n.error_bad_gateway_desc;
         iconData = Icons.router;
         break;
       case ApiErrorType.serviceUnavailable:
-        title = l10n?.error_service_unavailable ?? '';
-        description = l10n?.error_service_unavailable_desc ?? '';
+        title = l10n.error_service_unavailable;
+        description = l10n.error_service_unavailable_desc;
         iconData = Icons.cloud_off;
         break;
       case ApiErrorType.gatewayTimeout:
-        title = l10n?.error_gateway_timeout ?? '';
-        description = l10n?.error_gateway_timeout_desc ?? '';
+        title = l10n.error_gateway_timeout;
+        description = l10n.error_gateway_timeout_desc;
         iconData = Icons.access_time;
         break;
       default:
-        title = l10n?.error_server_error ?? '';
-        description = l10n?.error_server_error_desc ?? '';
+        title = l10n.error_server_error;
+        description = l10n.error_server_error_desc;
         iconData = Icons.error_outline;
     }
 
     // لا تعرض رسالة الـ server إذا كانت تحتوي على تفاصيل تقنية
     // استخدم الوصف المترجم فقط
-    final finalDescription =
-        (serverMessage != null &&
+    final safeServerMessage =
+        serverMessage != null &&
             serverMessage!.isNotEmpty &&
             !_isTechnicalMessage(serverMessage) &&
-            serverMessage!.length < 150)
-        ? serverMessage!
-        : description;
+            serverMessage!.length < 150
+        ? serverMessage
+        : null;
+    final finalDescription = ErrorMessageMapper.toLocalized(
+      context,
+      safeServerMessage,
+      defaultMessage: description,
+    );
 
     return BaseErrorWidget(
       title: title, // لا تعرض status code للمستخدم
@@ -112,13 +118,13 @@ class ServerErrorWidget extends BaseErrorWidget {
       icon: iconData,
       onRetry: onRetry,
       onSecondaryAction: onSecondaryAction,
-      secondaryActionText: l10n?.contact_support ?? 'تواصل مع الدعم',
+      secondaryActionText: l10n.contact_support,
       primaryColor: Colors.red,
     );
   }
 
   @override
   String getRetryButtonText(BuildContext context) {
-    return AppLocalizations.of(context)?.retry ?? '';
+    return AppLocalizations.of(context)!.retry;
   }
 }

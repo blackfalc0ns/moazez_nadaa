@@ -139,13 +139,33 @@ class ApiErrorWidget extends StatelessWidget {
   }) {
     ApiErrorType mapType(dynamic type) {
       final typeString = type.toString();
-      if (typeString.contains('network') || typeString.contains('connectionError')) return ApiErrorType.noInternetConnection;
-      if (typeString.contains('timeout')) return ApiErrorType.connectionTimeout;
-      if (typeString.contains('serverError') || typeString.contains('internalServer')) return ApiErrorType.serverError;
-      if (typeString.contains('unauthorized') || typeString.contains('tokenExpired') || typeString.contains('sessionExpired') || typeString.contains('invalidCredentials')) return ApiErrorType.unauthorized;
-      if (typeString.contains('forbidden')) return ApiErrorType.forbidden;
-      if (typeString.contains('notFound')) return ApiErrorType.notFound;
-      if (typeString.contains('validation') || typeString.contains('invalidInput')) return ApiErrorType.badRequest;
+      if (typeString.contains('network') ||
+          typeString.contains('connectionError')) {
+        return ApiErrorType.noInternetConnection;
+      }
+      if (typeString.contains('timeout')) {
+        return ApiErrorType.connectionTimeout;
+      }
+      if (typeString.contains('serverError') ||
+          typeString.contains('internalServer')) {
+        return ApiErrorType.serverError;
+      }
+      if (typeString.contains('unauthorized') ||
+          typeString.contains('tokenExpired') ||
+          typeString.contains('sessionExpired') ||
+          typeString.contains('invalidCredentials')) {
+        return ApiErrorType.unauthorized;
+      }
+      if (typeString.contains('forbidden')) {
+        return ApiErrorType.forbidden;
+      }
+      if (typeString.contains('notFound')) {
+        return ApiErrorType.notFound;
+      }
+      if (typeString.contains('validation') ||
+          typeString.contains('invalidInput')) {
+        return ApiErrorType.badRequest;
+      }
       return ApiErrorType.unknown;
     }
 

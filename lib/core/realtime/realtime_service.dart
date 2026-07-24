@@ -70,8 +70,9 @@ class RealtimeService with WidgetsBindingObserver {
             .setTransports(['websocket'])
             .setAuth({'token': token})
             .enableReconnection()
-            .setReconnectionDelay(2000)
-            .setReconnectionDelayMax(10000)
+            .setReconnectionAttempts(5)
+            .setReconnectionDelay(3000)
+            .setReconnectionDelayMax(60000)
             .setRandomizationFactor(0.5)
             .enableForceNewConnection()
             .build(),

@@ -4,7 +4,7 @@ import '../error_message_mapper.dart';
 
 /// Typed failure system for better error handling
 /// Instead of string messages, use typed failures
-/// 
+///
 /// Benefits:
 /// - Type-safe error handling
 /// - UI can react differently to different failure types
@@ -15,7 +15,7 @@ enum FailureType {
   network,
   timeout,
   connectionError,
-  
+
   // Server failures
   serverError,
   unauthorized,
@@ -24,19 +24,19 @@ enum FailureType {
   notFound,
   internalServer,
   serviceUnavailable,
-  
+
   // Validation failures
   validation,
   invalidInput,
-  
+
   // Auth failures
   tokenExpired,
   invalidCredentials,
   sessionExpired,
-  
+
   // Cache failures
   cacheError,
-  
+
   // Unknown
   unknown,
 }
@@ -73,17 +73,16 @@ abstract class TypedFailure {
 
 /// Network failure
 class NetworkFailure extends TypedFailure {
-  const NetworkFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.network);
+  const NetworkFailure({super.message, super.metadata})
+    : super(type: FailureType.network);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorNetwork ?? 'خطأ في الاتصال',
+      defaultMessage: l10n.errorNetwork,
     );
   }
 
@@ -98,24 +97,22 @@ class NetworkFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.errorNetworkAction ?? 'Check your internet connection';
+    return AppLocalizations.of(context)!.errorNetworkAction;
   }
 }
 
 /// Timeout failure
 class TimeoutFailure extends TypedFailure {
-  const TimeoutFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.timeout);
+  const TimeoutFailure({super.message, super.metadata})
+    : super(type: FailureType.timeout);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorTimeout ?? 'انتهت مهلة الطلب',
+      defaultMessage: l10n.errorTimeout,
     );
   }
 
@@ -130,25 +127,22 @@ class TimeoutFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.tryAgain ?? 'Try again';
+    return AppLocalizations.of(context)!.tryAgain;
   }
 }
 
 /// Server failure
 class ServerFailureTyped extends TypedFailure {
-  const ServerFailureTyped({
-    super.message,
-    super.statusCode,
-    super.metadata,
-  }) : super(type: FailureType.serverError);
+  const ServerFailureTyped({super.message, super.statusCode, super.metadata})
+    : super(type: FailureType.serverError);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorServer ?? 'خطأ في الخادم',
+      defaultMessage: l10n.errorServer,
     );
   }
 
@@ -163,27 +157,26 @@ class ServerFailureTyped extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     if (isRecoverable) {
-      return l10n?.errorServerActionRetry ?? 'Try again later';
+      return l10n.errorServerActionRetry;
     }
-    return l10n?.errorServerActionContact ?? 'Contact support';
+    return l10n.errorServerActionContact;
   }
 }
 
 /// Unauthorized failure
 class UnauthorizedFailure extends TypedFailure {
-  const UnauthorizedFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.unauthorized, statusCode: 401);
+  const UnauthorizedFailure({super.message, super.metadata})
+    : super(type: FailureType.unauthorized, statusCode: 401);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorInvalidCredentials ?? 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+      defaultMessage: l10n.errorInvalidCredentials,
     );
   }
 
@@ -198,24 +191,22 @@ class UnauthorizedFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.errorUnauthorizedAction ?? 'Please check your credentials';
+    return AppLocalizations.of(context)!.errorUnauthorizedAction;
   }
 }
 
 /// Forbidden failure
 class ForbiddenFailure extends TypedFailure {
-  const ForbiddenFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.forbidden, statusCode: 403);
+  const ForbiddenFailure({super.message, super.metadata})
+    : super(type: FailureType.forbidden, statusCode: 403);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorForbidden ?? 'تم رفض الوصول',
+      defaultMessage: l10n.errorForbidden,
     );
   }
 
@@ -230,23 +221,22 @@ class ForbiddenFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.errorForbiddenAction ?? 'You don\'t have permission';
+    return AppLocalizations.of(context)!.errorForbiddenAction;
   }
 }
 
 /// Conflict failure (e.g., duplicate resource, race condition)
 class ConflictFailure extends TypedFailure {
-  const ConflictFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.conflict, statusCode: 409);
+  const ConflictFailure({super.message, super.metadata})
+    : super(type: FailureType.conflict, statusCode: 409);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: 'حدث تضارب في البيانات، يرجى المحاولة',
+      defaultMessage: l10n.error_conflict,
     );
   }
 
@@ -261,23 +251,22 @@ class ConflictFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    return 'Refresh and try again';
+    return AppLocalizations.of(context)!.tryAgain;
   }
 }
 
 /// Not found failure
 class NotFoundFailure extends TypedFailure {
-  const NotFoundFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.notFound, statusCode: 404);
+  const NotFoundFailure({super.message, super.metadata})
+    : super(type: FailureType.notFound, statusCode: 404);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorNotFound ?? 'المصدر غير موجود',
+      defaultMessage: l10n.errorNotFound,
     );
   }
 
@@ -292,8 +281,7 @@ class NotFoundFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.errorNotFoundAction ?? 'Resource not found';
+    return AppLocalizations.of(context)!.errorNotFoundAction;
   }
 }
 
@@ -301,18 +289,16 @@ class NotFoundFailure extends TypedFailure {
 class ValidationFailureTyped extends TypedFailure {
   final Map<String, dynamic>? errors;
 
-  const ValidationFailureTyped({
-    super.message,
-    this.errors,
-    super.metadata,
-  }) : super(type: FailureType.validation, statusCode: 422);
+  const ValidationFailureTyped({super.message, this.errors, super.metadata})
+    : super(type: FailureType.validation, statusCode: 422);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorValidation ?? 'خطأ في التحقق من البيانات',
+      defaultMessage: l10n.errorValidation,
     );
   }
 
@@ -327,24 +313,22 @@ class ValidationFailureTyped extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.errorValidationAction ?? 'Check your inputs';
+    return AppLocalizations.of(context)!.errorValidationAction;
   }
 }
 
 /// Token expired failure
 class TokenExpiredFailure extends TypedFailure {
-  const TokenExpiredFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.tokenExpired);
+  const TokenExpiredFailure({super.message, super.metadata})
+    : super(type: FailureType.tokenExpired);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorTokenExpired ?? 'انتهت الجلسة',
+      defaultMessage: l10n.errorTokenExpired,
     );
   }
 
@@ -359,24 +343,23 @@ class TokenExpiredFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.errorTokenExpiredAction ?? 'Refreshing session...';
+    return AppLocalizations.of(context)!.errorTokenExpiredAction;
   }
 }
 
 /// Unknown failure
 class UnknownFailure extends TypedFailure {
-  const UnknownFailure({
-    super.message,
-    super.metadata,
-  }) : super(type: FailureType.unknown);
+  const UnknownFailure({super.message, super.metadata})
+    : super(type: FailureType.unknown);
 
   @override
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return ErrorMessageMapper.toArabic(
+    final l10n = AppLocalizations.of(context)!;
+    if (metadata?['reason'] == 'cancelled') return l10n.error_cancelled;
+    return ErrorMessageMapper.toLocalized(
+      context,
       message,
-      defaultMessage: l10n?.errorUnknown ?? 'حدث خطأ غير متوقع',
+      defaultMessage: l10n.errorUnknown,
     );
   }
 
@@ -391,8 +374,7 @@ class UnknownFailure extends TypedFailure {
 
   @override
   String getSuggestedAction(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return l10n?.tryAgain ?? 'Try again';
+    return AppLocalizations.of(context)!.tryAgain;
   }
 }
 
