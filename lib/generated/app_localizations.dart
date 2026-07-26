@@ -1220,6 +1220,36 @@ abstract class AppLocalizations {
   /// **'No gate assignments'**
   String get dismissalProfileNoGates;
 
+  /// No description provided for @dismissalProfileActiveAssignments.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get dismissalProfileActiveAssignments;
+
+  /// No description provided for @dismissalProfileLeadAssignments.
+  ///
+  /// In en, this message translates to:
+  /// **'Lead'**
+  String get dismissalProfileLeadAssignments;
+
+  /// No description provided for @dismissalProfileAcademicScopes.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic scopes'**
+  String get dismissalProfileAcademicScopes;
+
+  /// No description provided for @dismissalProfileNoAcademicScopes.
+  ///
+  /// In en, this message translates to:
+  /// **'No academic scopes assigned'**
+  String get dismissalProfileNoAcademicScopes;
+
+  /// No description provided for @dismissalProfileScopeLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Lead'**
+  String get dismissalProfileScopeLead;
+
   /// No description provided for @permissionProfileView.
   ///
   /// In en, this message translates to:

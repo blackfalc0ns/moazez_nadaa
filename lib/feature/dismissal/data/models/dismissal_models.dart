@@ -241,20 +241,67 @@ class DismissalDeliveryModel {
   final String receiverRelation;
 }
 
+class DismissalAcademicScopeModel {
+  const DismissalAcademicScopeModel({
+    required this.stageName,
+    required this.gradeName,
+    required this.sectionName,
+    required this.classroomName,
+    required this.isLead,
+    this.startsAt,
+    this.endsAt,
+  });
+
+  final String stageName;
+  final String gradeName;
+  final String sectionName;
+  final String classroomName;
+  final bool isLead;
+  final DateTime? startsAt;
+  final DateTime? endsAt;
+
+  List<String> get labels => [
+    stageName,
+    gradeName,
+    sectionName,
+    classroomName,
+  ].where((value) => value.trim().isNotEmpty).toList(growable: false);
+}
+
 class DismissalProfileModel {
   const DismissalProfileModel({
     required this.displayName,
+    required this.userType,
+    required this.status,
     required this.schoolName,
+    required this.schoolTimezone,
     required this.ready,
     required this.assignmentsCount,
+    required this.leadAssignmentsCount,
+    required this.activeAssignmentsCount,
     required this.gates,
+    required this.academicScopes,
+    required this.canViewGates,
+    required this.canManageRequests,
+    required this.canDeliver,
+    required this.canEscalate,
   });
 
   final String displayName;
+  final String userType;
+  final String status;
   final String schoolName;
+  final String schoolTimezone;
   final bool ready;
   final int assignmentsCount;
+  final int leadAssignmentsCount;
+  final int activeAssignmentsCount;
   final List<String> gates;
+  final List<DismissalAcademicScopeModel> academicScopes;
+  final bool canViewGates;
+  final bool canManageRequests;
+  final bool canDeliver;
+  final bool canEscalate;
 }
 
 class DismissalNotificationModel {

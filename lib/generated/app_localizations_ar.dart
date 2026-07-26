@@ -604,6 +604,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dismissalProfileNoGates => 'لا توجد بوابات مسندة';
 
   @override
+  String get dismissalProfileActiveAssignments => 'نشطة';
+
+  @override
+  String get dismissalProfileLeadAssignments => 'قيادية';
+
+  @override
+  String get dismissalProfileAcademicScopes => 'النطاقات الأكاديمية';
+
+  @override
+  String get dismissalProfileNoAcademicScopes =>
+      'لا توجد نطاقات أكاديمية مسندة';
+
+  @override
+  String get dismissalProfileScopeLead => 'مسؤول';
+
+  @override
   String get permissionProfileView => 'عرض ملف المشرف';
 
   @override

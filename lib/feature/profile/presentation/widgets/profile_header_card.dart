@@ -30,9 +30,7 @@ class ProfileHeaderCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.16),
               borderRadius: AppRadius.all(AppRadius.radius5),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.24),
-              ),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.24)),
             ),
             child: const Icon(
               Iconsax.security_user,
@@ -83,6 +81,16 @@ class ProfileHeaderCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (profile.schoolTimezone.isNotEmpty) ...[
+                  AppSpacing.verticalSpaceXs,
+                  Text(
+                    profile.schoolTimezone,
+                    style: AppTypography.caption.copyWith(
+                      color: Colors.white.withValues(alpha: 0.58),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

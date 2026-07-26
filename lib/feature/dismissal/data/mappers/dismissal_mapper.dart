@@ -170,25 +170,62 @@ class DismissalMapper {
   }
 
   static DismissalProfileModel profileFromJson(Map<String, dynamic> json) {
+    final profile = mapFrom(json, 'profile');
     final school = mapFrom(json, 'school');
     final readiness = mapFrom(json, 'readiness');
-    final assignments = listFrom(json, 'assignments');
+    final assignments = mapFrom(json, 'assignments');
+    final gates = listFrom(assignments, 'gates');
+    final scopes = listFrom(assignments, 'academicScopes');
+    final hasAssignments = boolFrom(readiness, 'hasAssignments');
+    final canViewGates = boolFrom(readiness, 'canViewGates');
+    final canManageRequests = boolFrom(readiness, 'canManageRequests');
     return DismissalProfileModel(
       displayName: firstNonEmpty([
+        stringFrom(profile, 'displayName'),
         stringFrom(json, 'displayName'),
         stringFrom(json, 'name'),
         stringFrom(mapFrom(json, 'user'), 'displayName'),
       ]),
+      userType: stringFrom(profile, 'userType'),
+      status: stringFrom(profile, 'status'),
       schoolName: firstNonEmpty([
         stringFrom(school, 'name'),
         stringFrom(json, 'schoolName'),
       ]),
-      ready: boolFrom(readiness, 'ready', defaultValue: true),
-      assignmentsCount: assignments.length,
-      gates: assignments
-          .map((item) => stringFrom(mapFrom(mapCast(item), 'gate'), 'name'))
+      schoolTimezone: stringFrom(school, 'timezone'),
+      ready: hasAssignments && canViewGates && canManageRequests,
+      assignmentsCount: intFrom(
+        assignments,
+        'totalCount',
+        defaultValue: scopes.length,
+      ),
+      leadAssignmentsCount: intFrom(assignments, 'leadCount'),
+      activeAssignmentsCount: intFrom(assignments, 'activeCount'),
+      gates: gates
+          .map((item) => stringFrom(mapCast(item), 'name'))
           .where((item) => item.isNotEmpty)
           .toList(growable: false),
+      academicScopes: scopes
+          .map((item) => _academicScopeFromJson(mapCast(item)))
+          .toList(growable: false),
+      canViewGates: canViewGates,
+      canManageRequests: canManageRequests,
+      canDeliver: boolFrom(readiness, 'canDeliver'),
+      canEscalate: boolFrom(readiness, 'canEscalate'),
+    );
+  }
+
+  static DismissalAcademicScopeModel _academicScopeFromJson(
+    Map<String, dynamic> json,
+  ) {
+    return DismissalAcademicScopeModel(
+      stageName: stringFrom(mapFrom(json, 'stage'), 'name'),
+      gradeName: stringFrom(mapFrom(json, 'grade'), 'name'),
+      sectionName: stringFrom(mapFrom(json, 'section'), 'name'),
+      classroomName: stringFrom(mapFrom(json, 'classroom'), 'name'),
+      isLead: boolFrom(json, 'isLead'),
+      startsAt: DateTime.tryParse(stringFrom(json, 'startsAt')),
+      endsAt: DateTime.tryParse(stringFrom(json, 'endsAt')),
     );
   }
 

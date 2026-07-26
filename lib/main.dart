@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'core/di/injection_container.dart';
 import 'core/theme/app_theme.dart';
 import 'core/localization/app_locale_controller.dart';
@@ -12,7 +11,6 @@ import 'core/utils/helper/on_genrated_routes.dart';
 import 'feature/notifications/data/services/dismissal_notification_local_presenter.dart';
 import 'firebase_options.dart';
 import 'generated/app_localizations.dart';
-
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   WidgetsFlutterBinding.ensureInitialized();

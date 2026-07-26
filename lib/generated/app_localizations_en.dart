@@ -612,6 +612,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dismissalProfileNoGates => 'No gate assignments';
 
   @override
+  String get dismissalProfileActiveAssignments => 'Active';
+
+  @override
+  String get dismissalProfileLeadAssignments => 'Lead';
+
+  @override
+  String get dismissalProfileAcademicScopes => 'Academic scopes';
+
+  @override
+  String get dismissalProfileNoAcademicScopes => 'No academic scopes assigned';
+
+  @override
+  String get dismissalProfileScopeLead => 'Lead';
+
+  @override
   String get permissionProfileView => 'View staff profile';
 
   @override

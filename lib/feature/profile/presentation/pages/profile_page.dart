@@ -3,13 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/di/injection_container.dart';
-import '../../../../core/permissions/app_permission.dart';
-import '../../../../core/permissions/permission_repository.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/common/custom_app_bar.dart';
 import '../../../../core/utils/feedback/premium_snackbar.dart';
 import '../../../../core/widgets/logo_shimmer_loader.dart';
 import '../../../../generated/app_localizations.dart';
+import '../../../dismissal/data/models/dismissal_models.dart';
 import '../../../dismissal/presentation/cubits/dismissal_cubit.dart';
 import '../../../dismissal/presentation/cubits/dismissal_state.dart';
 import '../widgets/profile_check_list_card.dart';
@@ -80,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ProfileCheckListCard(
                           title: l10n.dismissalProfilePermissions,
                           icon: Iconsax.shield_tick,
-                          items: _permissionLabels(l10n),
+                          items: _permissionLabels(profile, l10n),
                         ),
                       ],
                     ),
@@ -91,31 +90,16 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  List<String> _permissionLabels(AppLocalizations l10n) {
-    final granted = sl<PermissionRepository>().grantedPermissions();
-    return granted.map((permission) {
-      switch (permission) {
-        case AppPermission.viewProfile:
-          return l10n.permissionProfileView;
-        case AppPermission.viewGates:
-          return l10n.permissionGatesView;
-        case AppPermission.viewRequests:
-          return l10n.permissionRequestsView;
-        case AppPermission.manageRequests:
-          return l10n.permissionRequestsManage;
-        case AppPermission.deliverRequests:
-          return l10n.permissionRequestsDeliver;
-        case AppPermission.escalateRequests:
-          return l10n.permissionRequestsEscalate;
-        case AppPermission.viewHistory:
-          return l10n.permissionHistoryView;
-        case AppPermission.viewNotifications:
-          return l10n.permissionNotificationsView;
-        case AppPermission.manageNotifications:
-          return l10n.permissionNotificationsManage;
-        case AppPermission.manageDeviceTokens:
-          return l10n.permissionDeviceTokensManage;
-      }
-    }).toList(growable: false);
+  List<String> _permissionLabels(
+    DismissalProfileModel profile,
+    AppLocalizations l10n,
+  ) {
+    return [
+      l10n.permissionProfileView,
+      if (profile.canViewGates) l10n.permissionGatesView,
+      if (profile.canManageRequests) l10n.permissionRequestsManage,
+      if (profile.canDeliver) l10n.permissionRequestsDeliver,
+      if (profile.canEscalate) l10n.permissionRequestsEscalate,
+    ];
   }
 }

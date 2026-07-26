@@ -90,7 +90,6 @@ class _DismissalNotificationsViewState
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: AppColors.background,
           body: SafeArea(
             child: Column(
               children: [
