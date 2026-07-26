@@ -48,5 +48,8 @@ flutter {
 }
 
 dependencies {
+    // DataStore 1.2.1 includes a 16 KB page-size compatible native counter.
+    implementation("androidx.datastore:datastore:1.2.1")
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
