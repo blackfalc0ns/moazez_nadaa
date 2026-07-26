@@ -21,8 +21,9 @@ import '../../../../core/constants/storage_keys.dart';
 import '../../../auth/data/repositories/dismissal_auth_repo.dart';
 import '../../../auth/data/mappers/dismissal_auth_mapper.dart';
 import '../../../auth/data/models/dismissal_auth_session.dart';
+import '../../../../core/widgets/drawer_language_selector.dart';
 
-class AppSideDrawer extends StatelessWidget {
+class AppSideDrawer extends StatefulWidget {
   const AppSideDrawer({
     super.key,
     required this.selectedTarget,
@@ -35,11 +36,24 @@ class AppSideDrawer extends StatelessWidget {
   final ValueChanged<DismissalNavigationTarget> onTabSelected;
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<DismissalAuthSession?>(
-      future: _loadSession(),
-      builder: (context, snapshot) => _buildDrawer(context, snapshot.data),
-    );
+  State<AppSideDrawer> createState() => _AppSideDrawerState();
+}
+
+class _AppSideDrawerState extends State<AppSideDrawer> {
+  static DismissalAuthSession? _cachedSession;
+  late Future<DismissalAuthSession?> _sessionFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_cachedSession != null) {
+      _sessionFuture = Future.value(_cachedSession);
+    } else {
+      _sessionFuture = _loadSession().then((session) {
+        _cachedSession = session;
+        return session;
+      });
+    }
   }
 
   Future<DismissalAuthSession?> _loadSession() async {
@@ -53,6 +67,14 @@ class AppSideDrawer extends StatelessWidget {
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<DismissalAuthSession?>(
+      future: _sessionFuture,
+      builder: (context, snapshot) => _buildDrawer(context, snapshot.data),
+    );
   }
 
   Widget _buildDrawer(BuildContext context, DismissalAuthSession? session) {
@@ -73,9 +95,9 @@ class AppSideDrawer extends StatelessWidget {
         0xFFF6F8FB,
       ), // Matching background light color
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(28),
-          bottomLeft: Radius.circular(28),
+        borderRadius: BorderRadiusDirectional.only(
+          topEnd: Radius.circular(28),
+          bottomEnd: Radius.circular(28),
         ),
       ),
       child: Column(
@@ -94,6 +116,8 @@ class AppSideDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Center(child: DrawerLanguageSelector()),
+                  const SizedBox(height: AppSpacing.md),
                   // ── Quick Actions ──
                   _sectionLabel(l10n.drawerDailyWork),
                   _quickActionsRow(context, l10n),
@@ -221,7 +245,7 @@ class AppSideDrawer extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(20, topPadding + 16, 20, 20),
       decoration: const BoxDecoration(
         gradient: AppColors.primaryGradient,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(28)),
+        borderRadius: BorderRadiusDirectional.only(topEnd: Radius.circular(28)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -587,12 +611,12 @@ class AppSideDrawer extends StatelessWidget {
   }
 
   bool _hasTarget(DismissalNavigationTarget target) {
-    return availableTargets.contains(target);
+    return widget.availableTargets.contains(target);
   }
 
   void _selectTab(BuildContext context, DismissalNavigationTarget target) {
     Navigator.pop(context);
-    onTabSelected(target);
+    widget.onTabSelected(target);
   }
 
   void _openRoute(BuildContext context, String routeName) {
