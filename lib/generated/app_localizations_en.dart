@@ -1047,4 +1047,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get auth_remember_me => 'Remember me';
+
+  @override
+  String get dismissalNotificationCreatedTitle => 'New pickup request';
+
+  @override
+  String dismissalNotificationCreatedBody(Object childName) {
+    return 'A pickup request was created for $childName.';
+  }
+
+  @override
+  String get dismissalNotificationCancelledTitle => 'Pickup request cancelled';
+
+  @override
+  String dismissalNotificationCancelledBody(Object childName) {
+    return 'A parent cancelled the pickup request for $childName.';
+  }
+
+  @override
+  String get dismissalNotificationCalledTitle => 'Student called';
+
+  @override
+  String dismissalNotificationCalledBody(Object childName) {
+    return '$childName has been called for pickup.';
+  }
+
+  @override
+  String get dismissalNotificationReadyTitle => 'Student ready';
+
+  @override
+  String dismissalNotificationReadyBody(Object childName, Object gateName) {
+    return '$childName is ready at $gateName.';
+  }
+
+  @override
+  String get dismissalNotificationCompletedTitle => 'Pickup completed';
+
+  @override
+  String dismissalNotificationCompletedBody(Object childName) {
+    return 'Pickup for $childName has been completed.';
+  }
+
+  @override
+  String get dismissalNotificationExpiredTitle => 'Pickup request expired';
+
+  @override
+  String dismissalNotificationExpiredBody(Object childName) {
+    return 'The pickup request for $childName expired automatically.';
+  }
+
+  @override
+  String get dismissalNotificationDefaultBody =>
+      'There is a new update to pickup requests.';
 }

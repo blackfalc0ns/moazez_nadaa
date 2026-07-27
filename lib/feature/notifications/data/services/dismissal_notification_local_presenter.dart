@@ -7,6 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/constants/storage_keys.dart';
+import '../../../../generated/app_localizations.dart';
+import '../../../../generated/app_localizations_ar.dart';
+import '../../../../generated/app_localizations_en.dart';
+import 'dismissal_notification_localizer.dart';
+
 class DismissalNotificationLocalPresenter {
   DismissalNotificationLocalPresenter({FlutterLocalNotificationsPlugin? plugin})
     : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
@@ -87,7 +93,7 @@ class DismissalNotificationLocalPresenter {
     FlutterLocalNotificationsPlugin plugin,
     RemoteMessage message,
   ) async {
-    final presentation = _resolvePresentation(message);
+    final presentation = await _resolvePresentation(message);
     final dedupId =
         message.messageId ??
         _read(message.data, const [
@@ -172,9 +178,14 @@ class DismissalNotificationLocalPresenter {
     return payload;
   }
 
-  static _DismissalNotificationPresentation _resolvePresentation(
+  static Future<_DismissalNotificationPresentation> _resolvePresentation(
     RemoteMessage message,
-  ) {
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final locale = prefs.getString(StorageKeys.locale) ?? 'ar';
+    final AppLocalizations l10n = locale.startsWith('en')
+        ? AppLocalizationsEn()
+        : AppLocalizationsAr();
     final data = message.data;
     final rawTitle =
         message.notification?.title ?? _read(data, const ['title']);
@@ -182,6 +193,24 @@ class DismissalNotificationLocalPresenter {
         message.notification?.body ??
         _read(data, const ['body', 'message', 'description']);
     final type = _read(data, const ['type', 'notificationType']);
+    final sourceModule = _read(data, const [
+      'sourceModule',
+      'source_module',
+      'module',
+    ]);
+    final localized = DismissalNotificationLocalizer.resolve(
+      l10n: l10n,
+      type: type ?? '',
+      sourceModule: sourceModule ?? 'dismissal',
+      rawTitle: rawTitle ?? '',
+      rawBody: rawBody ?? '',
+    );
+    if (localized != null) {
+      return _DismissalNotificationPresentation(
+        title: _wrapForTextDirection(localized.title),
+        body: _wrapForTextDirection(localized.body),
+      );
+    }
     return _DismissalNotificationPresentation(
       title: _wrapForTextDirection(rawTitle ?? _titleForType(type)),
       body: _wrapForTextDirection(

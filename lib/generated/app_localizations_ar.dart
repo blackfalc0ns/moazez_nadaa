@@ -1040,4 +1040,56 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get auth_remember_me => 'تذكرني';
+
+  @override
+  String get dismissalNotificationCreatedTitle => 'طلب نداء جديد';
+
+  @override
+  String dismissalNotificationCreatedBody(Object childName) {
+    return 'تم إنشاء طلب نداء لـ $childName.';
+  }
+
+  @override
+  String get dismissalNotificationCancelledTitle => 'تم إلغاء طلب النداء';
+
+  @override
+  String dismissalNotificationCancelledBody(Object childName) {
+    return 'ألغى ولي الأمر طلب النداء الخاص بـ $childName.';
+  }
+
+  @override
+  String get dismissalNotificationCalledTitle => 'تم نداء الطالب';
+
+  @override
+  String dismissalNotificationCalledBody(Object childName) {
+    return 'تم نداء $childName للاستلام.';
+  }
+
+  @override
+  String get dismissalNotificationReadyTitle => 'الطالب جاهز للاستلام';
+
+  @override
+  String dismissalNotificationReadyBody(Object childName, Object gateName) {
+    return '$childName جاهز عند $gateName.';
+  }
+
+  @override
+  String get dismissalNotificationCompletedTitle => 'اكتمل الاستلام';
+
+  @override
+  String dismissalNotificationCompletedBody(Object childName) {
+    return 'تم استلام $childName بنجاح.';
+  }
+
+  @override
+  String get dismissalNotificationExpiredTitle => 'انتهت صلاحية طلب النداء';
+
+  @override
+  String dismissalNotificationExpiredBody(Object childName) {
+    return 'انتهت صلاحية طلب النداء الخاص بـ $childName تلقائيًا.';
+  }
+
+  @override
+  String get dismissalNotificationDefaultBody =>
+      'يوجد تحديث جديد على طلبات النداء.';
 }

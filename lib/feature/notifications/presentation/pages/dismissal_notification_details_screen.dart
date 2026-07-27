@@ -15,6 +15,7 @@ import '../../../../core/widgets/app_page_header.dart';
 import '../../../../core/widgets/logo_shimmer_loader.dart';
 import '../../../../generated/app_localizations.dart';
 import '../../data/models/dismissal_notification_model.dart';
+import '../../data/services/dismissal_notification_localizer.dart';
 import '../cubits/dismissal_notification_details_cubit.dart';
 
 class DismissalNotificationDetailsScreen extends StatelessWidget {
@@ -110,6 +111,15 @@ class _DetailContent extends StatelessWidget {
         : notification.isAnnouncement
         ? AppColors.info
         : AppColors.primary;
+    final localized = DismissalNotificationLocalizer.resolve(
+      l10n: l10n,
+      type: notification.type,
+      sourceModule: notification.sourceModule,
+      rawTitle: notification.title,
+      rawBody: notification.body,
+    );
+    final title = localized?.title ?? notification.title;
+    final body = localized?.body ?? notification.body;
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg,
@@ -149,7 +159,7 @@ class _DetailContent extends StatelessWidget {
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: Text(
-                      notification.title,
+                      title,
                       style: AppTypography.withWeight(
                         AppTypography.heading5.copyWith(
                           fontSize: 18,
@@ -163,7 +173,7 @@ class _DetailContent extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                notification.body,
+                body,
                 style: AppTypography.withColor(
                   AppTypography.bodyMedium.copyWith(fontSize: 13, height: 1.8),
                   AppColors.textPrimary,

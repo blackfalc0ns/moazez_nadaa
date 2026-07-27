@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../generated/app_localizations.dart';
 import '../../data/models/dismissal_notification_model.dart';
+import '../../data/services/dismissal_notification_localizer.dart';
 
 class DismissalNotificationCard extends StatelessWidget {
   const DismissalNotificationCard({
@@ -25,6 +26,15 @@ class DismissalNotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _color;
+    final localized = DismissalNotificationLocalizer.resolve(
+      l10n: AppLocalizations.of(context)!,
+      type: notification.type,
+      sourceModule: notification.sourceModule,
+      rawTitle: notification.title,
+      rawBody: notification.body,
+    );
+    final title = localized?.title ?? notification.title;
+    final body = localized?.body ?? notification.body;
     return Dismissible(
       key: ValueKey('dismissal-notification-${notification.id}'),
       direction: onArchive == null
@@ -97,7 +107,7 @@ class DismissalNotificationCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            notification.title,
+                            title,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppTypography.withWeight(
@@ -112,10 +122,10 @@ class DismissalNotificationCard extends StatelessWidget {
                           _PriorityPill(color: color),
                       ],
                     ),
-                    if (notification.body.isNotEmpty) ...[
+                    if (body.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        notification.body,
+                        body,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.withColor(

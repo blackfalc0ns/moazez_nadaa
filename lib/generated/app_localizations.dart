@@ -2023,6 +2023,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remember me'**
   String get auth_remember_me;
+
+  /// No description provided for @dismissalNotificationCreatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New pickup request'**
+  String get dismissalNotificationCreatedTitle;
+
+  /// No description provided for @dismissalNotificationCreatedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A pickup request was created for {childName}.'**
+  String dismissalNotificationCreatedBody(Object childName);
+
+  /// No description provided for @dismissalNotificationCancelledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup request cancelled'**
+  String get dismissalNotificationCancelledTitle;
+
+  /// No description provided for @dismissalNotificationCancelledBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A parent cancelled the pickup request for {childName}.'**
+  String dismissalNotificationCancelledBody(Object childName);
+
+  /// No description provided for @dismissalNotificationCalledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Student called'**
+  String get dismissalNotificationCalledTitle;
+
+  /// No description provided for @dismissalNotificationCalledBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{childName} has been called for pickup.'**
+  String dismissalNotificationCalledBody(Object childName);
+
+  /// No description provided for @dismissalNotificationReadyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Student ready'**
+  String get dismissalNotificationReadyTitle;
+
+  /// No description provided for @dismissalNotificationReadyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{childName} is ready at {gateName}.'**
+  String dismissalNotificationReadyBody(Object childName, Object gateName);
+
+  /// No description provided for @dismissalNotificationCompletedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup completed'**
+  String get dismissalNotificationCompletedTitle;
+
+  /// No description provided for @dismissalNotificationCompletedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup for {childName} has been completed.'**
+  String dismissalNotificationCompletedBody(Object childName);
+
+  /// No description provided for @dismissalNotificationExpiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup request expired'**
+  String get dismissalNotificationExpiredTitle;
+
+  /// No description provided for @dismissalNotificationExpiredBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The pickup request for {childName} expired automatically.'**
+  String dismissalNotificationExpiredBody(Object childName);
+
+  /// No description provided for @dismissalNotificationDefaultBody.
+  ///
+  /// In en, this message translates to:
+  /// **'There is a new update to pickup requests.'**
+  String get dismissalNotificationDefaultBody;
 }
 
 class _AppLocalizationsDelegate
