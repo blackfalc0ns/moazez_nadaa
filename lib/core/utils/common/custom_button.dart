@@ -35,14 +35,20 @@ class CustomButton extends StatelessWidget {
       width: width,
       height: height ?? 55,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
-          colors: [
-            (backgroundColor ?? AppColors.primary).withValues(alpha: 0.9),
-            backgroundColor ?? AppColors.primary,
-          ],
-        ),
+        color: isOutlined ? Colors.white : null,
+        gradient: isOutlined
+            ? null
+            : LinearGradient(
+                begin: Alignment.centerRight,
+                end: Alignment.centerLeft,
+                colors: [
+                  (backgroundColor ?? AppColors.primary).withValues(alpha: 0.9),
+                  backgroundColor ?? AppColors.primary,
+                ],
+              ),
+        border: isOutlined
+            ? Border.all(color: backgroundColor ?? AppColors.primary)
+            : null,
         borderRadius: BorderRadius.circular(16),
       ),
       child: MaterialButton(
@@ -65,7 +71,11 @@ class CustomButton extends StatelessWidget {
         Text(
           text,
           style: AppTypography.button.copyWith(
-            color: textColor ?? Colors.white,
+            color:
+                textColor ??
+                (isOutlined
+                    ? backgroundColor ?? AppColors.primary
+                    : Colors.white),
           ),
         ),
         if (suffix != null) ...[const SizedBox(width: 4), suffix!],

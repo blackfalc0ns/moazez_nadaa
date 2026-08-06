@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:ndaaa_chat/core/utils/common/custom_button.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -153,7 +154,7 @@ class PickupRequestCard extends StatelessWidget {
                       ),
                       const Spacer(),
                       Text(
-                        _updatedLabel(request, l10n),
+                        _updatedLabel(context, request, l10n),
                         style: AppTypography.caption.copyWith(
                           color: AppColors.textSecondaryLight,
                           fontWeight: FontWeight.w700,
@@ -200,11 +201,30 @@ class PickupRequestCard extends StatelessWidget {
     );
   }
 
-  String _updatedLabel(DismissalRequestModel request, AppLocalizations l10n) {
-    if (request.updatedAt.trim().isEmpty) {
-      return l10n.dismissalLastUpdateUnknown;
+  String _updatedLabel(
+    BuildContext context,
+    DismissalRequestModel request,
+    AppLocalizations l10n,
+  ) {
+    final updatedAt = request.updatedAt.trim();
+    if (updatedAt.isNotEmpty) {
+      return l10n.dismissalLastUpdate(_formatTimestamp(context, updatedAt));
     }
-    return l10n.dismissalLastUpdate(request.updatedAt);
+    final requestedAt = request.requestedAt.trim();
+    if (requestedAt.isNotEmpty) {
+      return l10n.dismissalRequestTimeValue(
+        _formatTimestamp(context, requestedAt),
+      );
+    }
+    return l10n.dismissalLastUpdateUnknown;
+  }
+
+  String _formatTimestamp(BuildContext context, String raw) {
+    final timestamp = DateTime.tryParse(raw)?.toLocal();
+    if (timestamp == null) return raw;
+    return DateFormat.yMMMd(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).add_jm().format(timestamp);
   }
 
   _NextPickupAction? _nextAction(

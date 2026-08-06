@@ -210,6 +210,25 @@
   "dismissalMarkAllRead": "تعليم الكل كمقروء",
   "dismissalMarkRead": "تعليم كمقروء",
   "dismissalEscalate": "تصعيد",
+  "dismissalEscalationTitle": "تصعيد طلب النداء",
+  "dismissalEscalationBody": "اختر سبب تصعيد طلب {studentName}، ويمكنك إضافة ملاحظة اختيارية للمسؤول.",
+  "@dismissalEscalationBody": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      }
+    }
+  },
+  "dismissalEscalationReasonLabel": "سبب التصعيد",
+  "dismissalEscalationNoteHint": "أضف تفاصيل تشغيلية مهمة للمسؤول",
+  "dismissalEscalationConfirm": "إرسال التصعيد",
+  "dismissalEscalationCancel": "إلغاء",
+  "dismissalEscalationReasonStudentNotArrived": "الطالب لم يصل",
+  "dismissalEscalationReasonGateCongestion": "ازدحام عند البوابة",
+  "dismissalEscalationReasonParentWaiting": "انتظار ولي الأمر لفترة طويلة",
+  "dismissalEscalationReasonSafetyConcern": "ملاحظة تتعلق بالسلامة",
+  "dismissalEscalationReasonManualFollowUp": "متابعة يدوية مطلوبة",
+  "dismissalEscalationReasonOther": "سبب آخر",
   "dismissalConfirmArrival": "تأكيد الوصول",
   "dismissalArrivalConfirmed": "الوصول مؤكد",
   "dismissalWaitingList": "قائمة الانتظار",
@@ -284,6 +303,14 @@
   "dismissalOperationDetails": "بيانات العملية",
   "dismissalRequestNumber": "رقم الطلب",
   "dismissalRequestedAt": "وقت إنشاء الطلب",
+  "dismissalRequestTimeValue": "وقت إنشاء الطلب {value}",
+  "@dismissalRequestTimeValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "dismissalUpdatedAt": "آخر تحديث",
   "dismissalUnreadOnly": "عرض التنبيهات غير المقروءة فقط",
   "dismissalNotificationsList": "قائمة التنبيهات",
@@ -414,5 +441,14 @@
   "dismissalNotificationExpiredTitle": "انتهت صلاحية طلب النداء",
   "dismissalNotificationExpiredBody": "انتهت صلاحية طلب النداء الخاص بـ {childName} تلقائيًا.",
   "@dismissalNotificationExpiredBody": {"placeholders": {"childName": {}}},
-  "dismissalNotificationDefaultBody": "يوجد تحديث جديد على طلبات النداء."
+  "dismissalNotificationDefaultBody": "يوجد تحديث جديد على طلبات النداء.",
+  "app_update_required_title": "تحديث مطلوب",
+  "app_update_available_title": "يتوفر تحديث جديد",
+  "app_update_required_description": "يلزم تثبيت أحدث إصدار لمواصلة استخدام نداء معزز بأمان.",
+  "app_update_available_description": "حدّث الآن للحصول على أحدث تحسينات الأداء والإصلاحات التشغيلية.",
+  "app_update_current_version": "الإصدار الحالي: {version}",
+  "@app_update_current_version": {"placeholders": {"version": {"type": "String"}}},
+  "app_update_now": "تحديث الآن",
+  "app_update_later": "لاحقًا",
+  "app_update_store_error": "تعذر فتح متجر التطبيقات. حاول مرة أخرى."
 }

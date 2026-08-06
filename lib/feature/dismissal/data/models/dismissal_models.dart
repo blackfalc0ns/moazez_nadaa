@@ -11,6 +11,19 @@ enum DismissalRequestStatus {
   unknown,
 }
 
+enum DismissalEscalationReason {
+  studentNotArrived('student_not_arrived'),
+  gateCongestion('gate_congestion'),
+  parentWaiting('parent_waiting'),
+  safetyConcern('safety_concern'),
+  manualFollowUp('manual_follow_up'),
+  other('other');
+
+  const DismissalEscalationReason(this.apiValue);
+
+  final String apiValue;
+}
+
 class DismissalChildModel {
   const DismissalChildModel({
     required this.id,

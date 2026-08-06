@@ -4,7 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/services/app_update/app_update_service.dart';
 import '../../../../core/utils/helper/on_genrated_routes.dart';
+import '../../../../core/widgets/app_update_dialog.dart';
 import '../../../auth/data/repositories/dismissal_auth_repo.dart';
 import '../../../onboarding/presentation/pages/onboarding_page.dart';
 
@@ -19,11 +21,14 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
+  late final Future<AppUpdateInfo?> _updateCheck;
+  bool _isNavigating = false;
 
   @override
   void initState() {
     super.initState();
     _initAnimations();
+    _updateCheck = sl<AppUpdateService>().checkForUpdate();
     _navigateToNext();
   }
 
@@ -39,8 +44,17 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateToNext() async {
+    if (_isNavigating) return;
+    _isNavigating = true;
     await Future.delayed(const Duration(milliseconds: 2500));
     if (!mounted) return;
+
+    final update = await _updateCheck;
+    if (!mounted) return;
+    if (update != null) {
+      final canContinue = await AppUpdateDialog.show(context, update: update);
+      if (!mounted || !canContinue) return;
+    }
 
     var hasSeenOnboarding = false;
     try {

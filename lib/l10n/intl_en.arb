@@ -209,6 +209,25 @@
   "dismissalMarkAllRead": "Mark all as read",
   "dismissalMarkRead": "Mark as read",
   "dismissalEscalate": "Escalate",
+  "dismissalEscalationTitle": "Escalate pickup request",
+  "dismissalEscalationBody": "Choose the escalation reason for {studentName}. You can add an optional note for the supervisor.",
+  "@dismissalEscalationBody": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      }
+    }
+  },
+  "dismissalEscalationReasonLabel": "Escalation reason",
+  "dismissalEscalationNoteHint": "Add relevant operational details",
+  "dismissalEscalationConfirm": "Send escalation",
+  "dismissalEscalationCancel": "Cancel",
+  "dismissalEscalationReasonStudentNotArrived": "Student has not arrived",
+  "dismissalEscalationReasonGateCongestion": "Gate congestion",
+  "dismissalEscalationReasonParentWaiting": "Parent waiting too long",
+  "dismissalEscalationReasonSafetyConcern": "Safety concern",
+  "dismissalEscalationReasonManualFollowUp": "Manual follow-up",
+  "dismissalEscalationReasonOther": "Other",
   "dismissalConfirmArrival": "Confirm arrival",
   "dismissalArrivalConfirmed": "Arrival confirmed",
   "dismissalWaitingList": "Waiting list",
@@ -283,6 +302,14 @@
   "dismissalOperationDetails": "Operation details",
   "dismissalRequestNumber": "Request number",
   "dismissalRequestedAt": "Request time",
+  "dismissalRequestTimeValue": "Requested {value}",
+  "@dismissalRequestTimeValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "dismissalUpdatedAt": "Last update",
   "dismissalUnreadOnly": "Show unread notifications only",
   "dismissalNotificationsList": "Notifications list",
@@ -413,5 +440,14 @@
   "dismissalNotificationExpiredTitle": "Pickup request expired",
   "dismissalNotificationExpiredBody": "The pickup request for {childName} expired automatically.",
   "@dismissalNotificationExpiredBody": {"placeholders": {"childName": {}}},
-  "dismissalNotificationDefaultBody": "There is a new update to pickup requests."
+  "dismissalNotificationDefaultBody": "There is a new update to pickup requests.",
+  "app_update_required_title": "Update required",
+  "app_update_available_title": "A new update is available",
+  "app_update_required_description": "Install the latest version to continue using Moazez Dismissal securely.",
+  "app_update_available_description": "Update now for the latest performance improvements and operational fixes.",
+  "app_update_current_version": "Current version: {version}",
+  "@app_update_current_version": {"placeholders": {"version": {"type": "String"}}},
+  "app_update_now": "Update now",
+  "app_update_later": "Later",
+  "app_update_store_error": "The app store could not be opened. Please try again."
 }

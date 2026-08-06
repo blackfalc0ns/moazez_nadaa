@@ -199,15 +199,15 @@ class DismissalRepo {
 
   Future<Either<TypedFailure, DismissalRequestModel>> escalateSafe({
     required String requestId,
-    String? reason,
-    String? message,
+    required DismissalEscalationReason reason,
+    String? note,
   }) {
     return _post(
       ApiEndpoints.dismissalEscalate(requestId),
       _requestFromEnvelope,
       data: {
-        if ((reason ?? '').trim().isNotEmpty) 'reason': reason!.trim(),
-        if ((message ?? '').trim().isNotEmpty) 'message': message!.trim(),
+        'reason': reason.apiValue,
+        if ((note ?? '').trim().isNotEmpty) 'note': note!.trim(),
       },
     );
   }

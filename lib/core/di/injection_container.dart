@@ -18,6 +18,7 @@ import '../interceptors/auth_interceptor.dart';
 import '../interceptors/language_interceptor.dart';
 import '../interceptors/refresh_token_interceptor.dart';
 import '../localization/app_locale_controller.dart';
+import '../services/app_update/app_update_service.dart';
 import '../utils/helper/global_navigator.dart';
 import '../permissions/default_permission_repository.dart';
 import '../permissions/permission_repository.dart';
@@ -39,6 +40,7 @@ Future<void> initDI() async {
   );
   await localeController.load();
   sl.registerLazySingleton<AppLocaleController>(() => localeController);
+  sl.registerLazySingleton<AppUpdateService>(AppUpdateService.new);
 
   final permissionRepository = DefaultPermissionRepository(
     prefs: sharedPreferences,

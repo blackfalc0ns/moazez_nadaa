@@ -662,6 +662,45 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dismissalEscalate => 'تصعيد';
 
   @override
+  String get dismissalEscalationTitle => 'تصعيد طلب النداء';
+
+  @override
+  String dismissalEscalationBody(String studentName) {
+    return 'اختر سبب تصعيد طلب $studentName، ويمكنك إضافة ملاحظة اختيارية للمسؤول.';
+  }
+
+  @override
+  String get dismissalEscalationReasonLabel => 'سبب التصعيد';
+
+  @override
+  String get dismissalEscalationNoteHint => 'أضف تفاصيل تشغيلية مهمة للمسؤول';
+
+  @override
+  String get dismissalEscalationConfirm => 'إرسال التصعيد';
+
+  @override
+  String get dismissalEscalationCancel => 'إلغاء';
+
+  @override
+  String get dismissalEscalationReasonStudentNotArrived => 'الطالب لم يصل';
+
+  @override
+  String get dismissalEscalationReasonGateCongestion => 'ازدحام عند البوابة';
+
+  @override
+  String get dismissalEscalationReasonParentWaiting =>
+      'انتظار ولي الأمر لفترة طويلة';
+
+  @override
+  String get dismissalEscalationReasonSafetyConcern => 'ملاحظة تتعلق بالسلامة';
+
+  @override
+  String get dismissalEscalationReasonManualFollowUp => 'متابعة يدوية مطلوبة';
+
+  @override
+  String get dismissalEscalationReasonOther => 'سبب آخر';
+
+  @override
   String get dismissalConfirmArrival => 'تأكيد الوصول';
 
   @override
@@ -829,6 +868,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dismissalRequestedAt => 'وقت إنشاء الطلب';
+
+  @override
+  String dismissalRequestTimeValue(String value) {
+    return 'وقت إنشاء الطلب $value';
+  }
 
   @override
   String get dismissalUpdatedAt => 'آخر تحديث';
@@ -1092,4 +1136,33 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get dismissalNotificationDefaultBody =>
       'يوجد تحديث جديد على طلبات النداء.';
+
+  @override
+  String get app_update_required_title => 'تحديث مطلوب';
+
+  @override
+  String get app_update_available_title => 'يتوفر تحديث جديد';
+
+  @override
+  String get app_update_required_description =>
+      'يلزم تثبيت أحدث إصدار لمواصلة استخدام نداء معزز بأمان.';
+
+  @override
+  String get app_update_available_description =>
+      'حدّث الآن للحصول على أحدث تحسينات الأداء والإصلاحات التشغيلية.';
+
+  @override
+  String app_update_current_version(String version) {
+    return 'الإصدار الحالي: $version';
+  }
+
+  @override
+  String get app_update_now => 'تحديث الآن';
+
+  @override
+  String get app_update_later => 'لاحقًا';
+
+  @override
+  String get app_update_store_error =>
+      'تعذر فتح متجر التطبيقات. حاول مرة أخرى.';
 }

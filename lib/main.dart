@@ -45,7 +45,7 @@ class MoazezChatApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         builder: DevicePreview.appBuilder,
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        // darkTheme: AppTheme.darkTheme,
         locale: localeController.locale,
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: AppLocalizations.localizationsDelegates,

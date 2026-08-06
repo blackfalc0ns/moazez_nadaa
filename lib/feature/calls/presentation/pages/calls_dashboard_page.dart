@@ -17,6 +17,7 @@ import '../../../dismissal/data/models/dismissal_models.dart';
 import '../../../dismissal/presentation/cubits/dismissal_cubit.dart';
 import '../../../dismissal/presentation/cubits/dismissal_state.dart';
 import '../../../dismissal/presentation/localization/dismissal_localizations.dart';
+import '../../../dismissal/presentation/widgets/dismissal_escalation_sheet.dart';
 import '../widgets/calls_header.dart';
 import '../widgets/calls_summary_strip.dart';
 import '../widgets/pickup_request_card.dart';
@@ -164,11 +165,7 @@ class _CallsDashboardPageState extends State<CallsDashboardPage> {
                               );
                             },
                             onDeliver: () => _openDeliverySheet(request),
-                            onEscalate: () {
-                              context.read<DismissalCubit>().escalate(
-                                request.id,
-                              );
-                            },
+                            onEscalate: () => _openEscalationSheet(request),
                             onDetails: () => Navigator.pushNamed(
                               context,
                               Routes.requestDetails,
@@ -204,6 +201,19 @@ class _CallsDashboardPageState extends State<CallsDashboardPage> {
           return matchesSearch && matchesStatus;
         })
         .toList(growable: false);
+  }
+
+  Future<void> _openEscalationSheet(DismissalRequestModel request) async {
+    final input = await DismissalEscalationSheet.show(
+      context,
+      studentName: request.child.displayName,
+    );
+    if (!mounted || input == null) return;
+    await _cubit.escalate(
+      requestId: request.id,
+      reason: input.reason,
+      note: input.note,
+    );
   }
 
   Future<void> _openDeliverySheet(DismissalRequestModel request) async {

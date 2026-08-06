@@ -1334,6 +1334,78 @@ abstract class AppLocalizations {
   /// **'Escalate'**
   String get dismissalEscalate;
 
+  /// No description provided for @dismissalEscalationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Escalate pickup request'**
+  String get dismissalEscalationTitle;
+
+  /// No description provided for @dismissalEscalationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the escalation reason for {studentName}. You can add an optional note for the supervisor.'**
+  String dismissalEscalationBody(String studentName);
+
+  /// No description provided for @dismissalEscalationReasonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Escalation reason'**
+  String get dismissalEscalationReasonLabel;
+
+  /// No description provided for @dismissalEscalationNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add relevant operational details'**
+  String get dismissalEscalationNoteHint;
+
+  /// No description provided for @dismissalEscalationConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Send escalation'**
+  String get dismissalEscalationConfirm;
+
+  /// No description provided for @dismissalEscalationCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get dismissalEscalationCancel;
+
+  /// No description provided for @dismissalEscalationReasonStudentNotArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Student has not arrived'**
+  String get dismissalEscalationReasonStudentNotArrived;
+
+  /// No description provided for @dismissalEscalationReasonGateCongestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Gate congestion'**
+  String get dismissalEscalationReasonGateCongestion;
+
+  /// No description provided for @dismissalEscalationReasonParentWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent waiting too long'**
+  String get dismissalEscalationReasonParentWaiting;
+
+  /// No description provided for @dismissalEscalationReasonSafetyConcern.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety concern'**
+  String get dismissalEscalationReasonSafetyConcern;
+
+  /// No description provided for @dismissalEscalationReasonManualFollowUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual follow-up'**
+  String get dismissalEscalationReasonManualFollowUp;
+
+  /// No description provided for @dismissalEscalationReasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get dismissalEscalationReasonOther;
+
   /// No description provided for @dismissalConfirmArrival.
   ///
   /// In en, this message translates to:
@@ -1651,6 +1723,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request time'**
   String get dismissalRequestedAt;
+
+  /// No description provided for @dismissalRequestTimeValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested {value}'**
+  String dismissalRequestTimeValue(String value);
 
   /// No description provided for @dismissalUpdatedAt.
   ///
@@ -2101,6 +2179,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There is a new update to pickup requests.'**
   String get dismissalNotificationDefaultBody;
+
+  /// No description provided for @app_update_required_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Update required'**
+  String get app_update_required_title;
+
+  /// No description provided for @app_update_available_title.
+  ///
+  /// In en, this message translates to:
+  /// **'A new update is available'**
+  String get app_update_available_title;
+
+  /// No description provided for @app_update_required_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Install the latest version to continue using Moazez Dismissal securely.'**
+  String get app_update_required_description;
+
+  /// No description provided for @app_update_available_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Update now for the latest performance improvements and operational fixes.'**
+  String get app_update_available_description;
+
+  /// No description provided for @app_update_current_version.
+  ///
+  /// In en, this message translates to:
+  /// **'Current version: {version}'**
+  String app_update_current_version(String version);
+
+  /// No description provided for @app_update_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get app_update_now;
+
+  /// No description provided for @app_update_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get app_update_later;
+
+  /// No description provided for @app_update_store_error.
+  ///
+  /// In en, this message translates to:
+  /// **'The app store could not be opened. Please try again.'**
+  String get app_update_store_error;
 }
 
 class _AppLocalizationsDelegate

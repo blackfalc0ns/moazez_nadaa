@@ -18,6 +18,7 @@ import '../../../dismissal/data/models/dismissal_models.dart';
 import '../../../dismissal/presentation/cubits/dismissal_cubit.dart';
 import '../../../dismissal/presentation/cubits/dismissal_state.dart';
 import '../../../dismissal/presentation/localization/dismissal_localizations.dart';
+import '../../../dismissal/presentation/widgets/dismissal_escalation_sheet.dart';
 import '../widgets/waiting_students_empty_state.dart';
 import '../widgets/waiting_students_summary.dart';
 
@@ -82,7 +83,10 @@ class _WaitingStudentsPageState extends State<WaitingStudentsPage> {
           final isInitialLoading = state.isLoadingWaiting && waiting == null;
 
           return Scaffold(
-            appBar: CustomAppBar(title: l10n.dismissalWaitingTitle , showBackButton: false,),
+            appBar: CustomAppBar(
+              title: l10n.dismissalWaitingTitle,
+              showBackButton: false,
+            ),
             body: isInitialLoading
                 ? const Center(child: LogoShimmerLoader(size: 112))
                 : RefreshIndicator(
@@ -157,9 +161,7 @@ class _WaitingStudentsPageState extends State<WaitingStudentsPage> {
                               onConfirmArrival: () => context
                                   .read<DismissalCubit>()
                                   .confirmArrival(student.id),
-                              onEscalate: () => context
-                                  .read<DismissalCubit>()
-                                  .escalate(student.id),
+                              onEscalate: () => _openEscalationSheet(student),
                             ),
                       ],
                     ),
@@ -176,6 +178,19 @@ class _WaitingStudentsPageState extends State<WaitingStudentsPage> {
           return _selectedStatus == null || student.status == _selectedStatus;
         })
         .toList(growable: false);
+  }
+
+  Future<void> _openEscalationSheet(DismissalRequestModel request) async {
+    final input = await DismissalEscalationSheet.show(
+      context,
+      studentName: request.child.displayName,
+    );
+    if (!mounted || input == null) return;
+    await _cubit.escalate(
+      requestId: request.id,
+      reason: input.reason,
+      note: input.note,
+    );
   }
 }
 

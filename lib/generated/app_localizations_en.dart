@@ -669,6 +669,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dismissalEscalate => 'Escalate';
 
   @override
+  String get dismissalEscalationTitle => 'Escalate pickup request';
+
+  @override
+  String dismissalEscalationBody(String studentName) {
+    return 'Choose the escalation reason for $studentName. You can add an optional note for the supervisor.';
+  }
+
+  @override
+  String get dismissalEscalationReasonLabel => 'Escalation reason';
+
+  @override
+  String get dismissalEscalationNoteHint => 'Add relevant operational details';
+
+  @override
+  String get dismissalEscalationConfirm => 'Send escalation';
+
+  @override
+  String get dismissalEscalationCancel => 'Cancel';
+
+  @override
+  String get dismissalEscalationReasonStudentNotArrived =>
+      'Student has not arrived';
+
+  @override
+  String get dismissalEscalationReasonGateCongestion => 'Gate congestion';
+
+  @override
+  String get dismissalEscalationReasonParentWaiting =>
+      'Parent waiting too long';
+
+  @override
+  String get dismissalEscalationReasonSafetyConcern => 'Safety concern';
+
+  @override
+  String get dismissalEscalationReasonManualFollowUp => 'Manual follow-up';
+
+  @override
+  String get dismissalEscalationReasonOther => 'Other';
+
+  @override
   String get dismissalConfirmArrival => 'Confirm arrival';
 
   @override
@@ -837,6 +877,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dismissalRequestedAt => 'Request time';
+
+  @override
+  String dismissalRequestTimeValue(String value) {
+    return 'Requested $value';
+  }
 
   @override
   String get dismissalUpdatedAt => 'Last update';
@@ -1099,4 +1144,33 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dismissalNotificationDefaultBody =>
       'There is a new update to pickup requests.';
+
+  @override
+  String get app_update_required_title => 'Update required';
+
+  @override
+  String get app_update_available_title => 'A new update is available';
+
+  @override
+  String get app_update_required_description =>
+      'Install the latest version to continue using Moazez Dismissal securely.';
+
+  @override
+  String get app_update_available_description =>
+      'Update now for the latest performance improvements and operational fixes.';
+
+  @override
+  String app_update_current_version(String version) {
+    return 'Current version: $version';
+  }
+
+  @override
+  String get app_update_now => 'Update now';
+
+  @override
+  String get app_update_later => 'Later';
+
+  @override
+  String get app_update_store_error =>
+      'The app store could not be opened. Please try again.';
 }

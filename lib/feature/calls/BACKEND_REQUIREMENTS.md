@@ -193,13 +193,13 @@ Response:
 }
 ```
 
-### POST `/api/v1/pickup/requests/{id}/escalate`
-Escalates delayed requests.
+### POST `/api/v1/dismissal/requests/{id}/escalate`
+Creates an idempotent escalation event for an active request.
 
 Request:
 ```json
 {
-  "reason": "waiting_time_exceeded",
+  "reason": "parent_waiting",
   "message": "الطالب تجاوز 15 دقيقة انتظار"
 }
 ```

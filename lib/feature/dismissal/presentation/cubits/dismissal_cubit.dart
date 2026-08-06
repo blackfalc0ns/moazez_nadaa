@@ -291,12 +291,16 @@ class DismissalCubit extends Cubit<DismissalState> {
     });
   }
 
-  Future<void> escalate(String requestId) async {
+  Future<void> escalate({
+    required String requestId,
+    required DismissalEscalationReason reason,
+    String? note,
+  }) async {
     _startAction();
     final result = await _repo.escalateSafe(
       requestId: requestId,
-      reason: 'parent_waiting',
-      message: 'Parent has waited too long',
+      reason: reason,
+      note: note,
     );
     if (isClosed) return;
     await result.fold((failure) async => _failAction(failure), (_) async {
