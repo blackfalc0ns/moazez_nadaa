@@ -52,12 +52,36 @@ class ProfileHeaderCard extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Text(
-                  l10n.dismissalStaffRole,
-                  style: AppTypography.caption.copyWith(
-                    color: Colors.white.withValues(alpha: 0.76),
-                    fontWeight: FontWeight.w700,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l10n.dismissalStaffRole,
+                        style: AppTypography.caption.copyWith(
+                          color: Colors.white.withValues(alpha: 0.76),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 7,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: AppRadius.all(AppRadius.radiusFull),
+                      ),
+                      child: Text(
+                        _statusLabel(l10n),
+                        style: AppTypography.caption.copyWith(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 AppSpacing.verticalSpaceSm,
                 Row(
@@ -97,5 +121,18 @@ class ProfileHeaderCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _statusLabel(AppLocalizations l10n) {
+    switch (profile.status.trim().toLowerCase()) {
+      case 'active':
+        return l10n.dismissalActive;
+      case 'inactive':
+        return l10n.dismissalInactive;
+      default:
+        return profile.status.trim().isEmpty
+            ? l10n.dismissalUnknownValue
+            : profile.status;
+    }
   }
 }

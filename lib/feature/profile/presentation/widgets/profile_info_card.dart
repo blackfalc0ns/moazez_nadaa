@@ -24,7 +24,7 @@ class ProfileInfoCard extends StatelessWidget {
         border: Border.all(color: AppColors.borderLight),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Wrap(
             spacing: AppSpacing.sm,
@@ -119,9 +119,10 @@ class _ProfileMetric extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTypography.caption.copyWith(
+              style: AppTypography.bodySmall.copyWith(
                 color: AppColors.textSecondaryLight,
                 fontSize: 9,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -146,6 +147,7 @@ class _AcademicScopes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -180,46 +182,126 @@ class _AcademicScopes extends StatelessWidget {
                 color: AppColors.primary.withValues(alpha: 0.05),
                 borderRadius: AppRadius.all(AppRadius.radius3),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      scope.labels.isEmpty
-                          ? emptyLabel
-                          : scope.labels.join(' • '),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.caption.copyWith(
-                        color: AppColors.primaryDeep,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  if (scope.isLead) ...[
-                    AppSpacing.horizontalSpaceXs,
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 7,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.warning.withValues(alpha: 0.12),
-                        borderRadius: AppRadius.all(AppRadius.radiusFull),
-                      ),
-                      child: Text(
-                        leadLabel,
-                        style: AppTypography.caption.copyWith(
-                          color: AppColors.warning,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
+              child: _ScopeContent(
+                scope: scope,
+                emptyLabel: emptyLabel,
+                leadLabel: leadLabel,
+                l10n: l10n,
               ),
             ),
       ],
+    );
+  }
+}
+
+class _ScopeContent extends StatelessWidget {
+  const _ScopeContent({
+    required this.scope,
+    required this.emptyLabel,
+    required this.leadLabel,
+    required this.l10n,
+  });
+
+  final DismissalAcademicScopeModel scope;
+  final String emptyLabel;
+  final String leadLabel;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final status = _assignmentStatus();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                scope.labels.isEmpty ? emptyLabel : scope.labels.join(' / '),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.primaryDeep,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            if (scope.isLead) ...[
+              AppSpacing.horizontalSpaceXs,
+              _ScopeBadge(label: leadLabel, color: AppColors.warning),
+            ],
+          ],
+        ),
+        AppSpacing.verticalSpaceXs,
+        Row(
+          children: [
+            const Icon(Iconsax.calendar_1, size: 14, color: AppColors.primary),
+            AppSpacing.horizontalSpaceXs,
+            Expanded(
+              child: Text(
+                _periodLabel(context),
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.textSecondaryLight,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            _ScopeBadge(label: status.$1, color: status.$2),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _periodLabel(BuildContext context) {
+    if (scope.startsAt == null && scope.endsAt == null) {
+      return l10n.dismissalAssignmentPeriodUnavailable;
+    }
+    final material = MaterialLocalizations.of(context);
+    final start = scope.startsAt == null
+        ? l10n.dismissalUnknownValue
+        : material.formatMediumDate(scope.startsAt!.toLocal());
+    final end = scope.endsAt == null
+        ? l10n.dismissalUnknownValue
+        : material.formatMediumDate(scope.endsAt!.toLocal());
+    return l10n.dismissalAssignmentPeriod(start, end);
+  }
+
+  (String, Color) _assignmentStatus() {
+    final now = DateTime.now();
+    if (scope.endsAt != null && now.isAfter(scope.endsAt!.toLocal())) {
+      return (l10n.dismissalAssignmentEnded, AppColors.grey);
+    }
+    if (scope.startsAt != null && now.isBefore(scope.startsAt!.toLocal())) {
+      return (l10n.dismissalAssignmentUpcoming, AppColors.info);
+    }
+    return (l10n.dismissalAssignmentActive, AppColors.success);
+  }
+}
+
+class _ScopeBadge extends StatelessWidget {
+  const _ScopeBadge({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: AppRadius.all(AppRadius.radiusFull),
+      ),
+      child: Text(
+        label,
+        style: AppTypography.caption.copyWith(
+          color: color,
+          fontSize: 9,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
     );
   }
 }

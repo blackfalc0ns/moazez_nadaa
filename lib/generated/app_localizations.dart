@@ -2227,6 +2227,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The app store could not be opened. Please try again.'**
   String get app_update_store_error;
+
+  /// No description provided for @dismissalAssignmentPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'From {start} to {end}'**
+  String dismissalAssignmentPeriod(String start, String end);
+
+  /// No description provided for @dismissalAssignmentPeriodUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment period unavailable'**
+  String get dismissalAssignmentPeriodUnavailable;
+
+  /// No description provided for @dismissalAssignmentActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active now'**
+  String get dismissalAssignmentActive;
+
+  /// No description provided for @dismissalAssignmentUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get dismissalAssignmentUpcoming;
+
+  /// No description provided for @dismissalAssignmentEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get dismissalAssignmentEnded;
+
+  /// No description provided for @dismissalGateLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gate location'**
+  String get dismissalGateLocationTitle;
+
+  /// No description provided for @dismissalGateCoordinates.
+  ///
+  /// In en, this message translates to:
+  /// **'{latitude}, {longitude}'**
+  String dismissalGateCoordinates(String latitude, String longitude);
+
+  /// No description provided for @dismissalOpenInMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Maps'**
+  String get dismissalOpenInMaps;
+
+  /// No description provided for @dismissalMapOpenError.
+  ///
+  /// In en, this message translates to:
+  /// **'The gate location could not be opened.'**
+  String get dismissalMapOpenError;
+
+  /// No description provided for @dismissalGateOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Display order {order}'**
+  String dismissalGateOrder(num order);
+
+  /// No description provided for @dismissalGateWaitingZones.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting zones'**
+  String get dismissalGateWaitingZones;
+
+  /// No description provided for @dismissalGateNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Operational notes'**
+  String get dismissalGateNotes;
 }
 
 class _AppLocalizationsDelegate

@@ -24,16 +24,19 @@ class DismissalNotificationDetailsCubit
       (failure) async => emit(DismissalNotificationDetailsError(failure)),
       (detail) async {
         if (canMarkRead && !detail.isRead) {
+          // Render the complete notification before the read mutation returns.
+          emit(DismissalNotificationDetailsLoaded(notification: detail));
           final readResult = await _repo.markRead(detail.id);
           if (isClosed) return;
           readResult.fold(
-            (_) => emit(
+            (_) {},
+            (updated) => emit(
               DismissalNotificationDetailsLoaded(
-                notification: detail.markRead(),
+                // The read endpoint may return only status metadata. Keep the
+                // already loaded title/body and merge the authoritative time.
+                notification: detail.markRead(at: updated.readAt),
               ),
             ),
-            (updated) =>
-                emit(DismissalNotificationDetailsLoaded(notification: updated)),
           );
           return;
         }

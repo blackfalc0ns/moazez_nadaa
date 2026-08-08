@@ -62,6 +62,8 @@ class DismissalGateModel {
     this.notes,
     this.latitude,
     this.longitude,
+    this.createdAt,
+    this.updatedAt,
   });
 
   final String id;
@@ -75,8 +77,17 @@ class DismissalGateModel {
   final String? notes;
   final double? latitude;
   final double? longitude;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   bool get isOpen => isActive && status.toLowerCase() == 'open';
+
+  bool get hasValidLocation {
+    final lat = latitude;
+    final lng = longitude;
+    if (lat == null || lng == null) return false;
+    return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+  }
 }
 
 class DismissalSignalsModel {

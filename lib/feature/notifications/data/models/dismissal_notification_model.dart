@@ -63,7 +63,7 @@ class DismissalNotificationModel {
 
   bool get isMessage => false;
 
-  DismissalNotificationModel markRead() {
+  DismissalNotificationModel markRead({DateTime? at}) {
     return DismissalNotificationModel(
       id: id,
       type: type,
@@ -73,7 +73,7 @@ class DismissalNotificationModel {
       priority: priority,
       status: 'read',
       sourceId: sourceId,
-      readAt: readAt ?? DateTime.now(),
+      readAt: at ?? readAt ?? DateTime.now(),
       archivedAt: archivedAt,
       createdAt: createdAt,
       deepLink: deepLink,

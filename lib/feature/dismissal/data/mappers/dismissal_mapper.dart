@@ -92,6 +92,8 @@ class DismissalMapper {
       notes: nullableStringFrom(json, 'notes'),
       latitude: doubleNullableFrom(location, 'latitude'),
       longitude: doubleNullableFrom(location, 'longitude'),
+      createdAt: DateTime.tryParse(stringFrom(json, 'createdAt')),
+      updatedAt: DateTime.tryParse(stringFrom(json, 'updatedAt')),
     );
   }
 

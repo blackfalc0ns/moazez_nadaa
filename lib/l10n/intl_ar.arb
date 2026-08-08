@@ -450,5 +450,20 @@
   "@app_update_current_version": {"placeholders": {"version": {"type": "String"}}},
   "app_update_now": "تحديث الآن",
   "app_update_later": "لاحقًا",
-  "app_update_store_error": "تعذر فتح متجر التطبيقات. حاول مرة أخرى."
+  "app_update_store_error": "تعذر فتح متجر التطبيقات. حاول مرة أخرى.",
+  "dismissalAssignmentPeriod": "من {start} إلى {end}",
+  "@dismissalAssignmentPeriod": {"placeholders": {"start": {"type": "String"}, "end": {"type": "String"}}},
+  "dismissalAssignmentPeriodUnavailable": "فترة التكليف غير محددة",
+  "dismissalAssignmentActive": "نشط الآن",
+  "dismissalAssignmentUpcoming": "قادم",
+  "dismissalAssignmentEnded": "منتهٍ",
+  "dismissalGateLocationTitle": "موقع البوابة",
+  "dismissalGateCoordinates": "{latitude}، {longitude}",
+  "@dismissalGateCoordinates": {"placeholders": {"latitude": {"type": "String"}, "longitude": {"type": "String"}}},
+  "dismissalOpenInMaps": "فتح في الخرائط",
+  "dismissalMapOpenError": "تعذر فتح موقع البوابة.",
+  "dismissalGateOrder": "ترتيب العرض {order}",
+  "@dismissalGateOrder": {"placeholders": {"order": {"type": "num"}}},
+  "dismissalGateWaitingZones": "مناطق الانتظار",
+  "dismissalGateNotes": "ملاحظات التشغيل"
 }

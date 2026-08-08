@@ -12,6 +12,9 @@
         android:label="معزز - النداء"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA1XNcpZlXAgDtKVmC3vMi_V4_f3O4tLes" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

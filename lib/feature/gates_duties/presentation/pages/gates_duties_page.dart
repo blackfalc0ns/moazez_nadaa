@@ -14,6 +14,7 @@ import '../../../../generated/app_localizations.dart';
 import '../../../dismissal/data/models/dismissal_models.dart';
 import '../../../dismissal/presentation/cubits/dismissal_cubit.dart';
 import '../../../dismissal/presentation/cubits/dismissal_state.dart';
+import '../widgets/gate_location_map_card.dart';
 
 class GatesDutiesPage extends StatefulWidget {
   const GatesDutiesPage({super.key});
@@ -61,7 +62,10 @@ class _GatesDutiesPageState extends State<GatesDutiesPage> {
           final isInitialLoading = state.isLoadingGates && gatesPage == null;
 
           return Scaffold(
-            appBar: CustomAppBar(title: l10n.dismissalGatesTitle , showBackButton: false,),
+            appBar: CustomAppBar(
+              title: l10n.dismissalGatesTitle,
+              showBackButton: false,
+            ),
             body: isInitialLoading
                 ? const Center(child: LogoShimmerLoader(size: 112))
                 : RefreshIndicator(
@@ -409,7 +413,7 @@ class _GateBackendCard extends StatelessWidget {
                     ),
                     Text(
                       _gateSubtitle(gate, l10n),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.caption.copyWith(
                         color: AppColors.textSecondaryLight,
@@ -422,8 +426,34 @@ class _GateBackendCard extends StatelessWidget {
               _GateStatusChip(label: _statusLabel(gate, l10n), color: color),
             ],
           ),
+          if (gate.sortOrder > 0 || gate.updatedAt != null) ...[
+            AppSpacing.verticalSpaceSm,
+            Wrap(
+              spacing: AppSpacing.xs,
+              runSpacing: AppSpacing.xs,
+              children: [
+                if (gate.sortOrder > 0)
+                  _GateMetaChip(
+                    icon: Iconsax.sort,
+                    label: l10n.dismissalGateOrder(gate.sortOrder),
+                  ),
+                if (gate.updatedAt != null)
+                  _GateMetaChip(
+                    icon: Iconsax.clock,
+                    label: l10n.dismissalLastUpdate(
+                      _formatDateTime(context, gate.updatedAt!),
+                    ),
+                  ),
+              ],
+            ),
+          ],
           if (gate.waitingZones.isNotEmpty) ...[
             AppSpacing.verticalSpaceMd,
+            _GateSectionLabel(
+              icon: Iconsax.people,
+              label: l10n.dismissalGateWaitingZones,
+            ),
+            AppSpacing.verticalSpaceXs,
             Wrap(
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,
@@ -434,13 +464,30 @@ class _GateBackendCard extends StatelessWidget {
           ],
           if ((gate.notes ?? '').trim().isNotEmpty) ...[
             AppSpacing.verticalSpaceMd,
-            Text(
-              gate.notes!,
-              style: AppTypography.bodySmall.copyWith(
-                color: AppColors.textPrimaryLight,
-                fontWeight: FontWeight.w700,
+            _GateSectionLabel(
+              icon: Iconsax.note_text,
+              label: l10n.dismissalGateNotes,
+            ),
+            AppSpacing.verticalSpaceXs,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: AppColors.lightGrey.withValues(alpha: 0.35),
+                borderRadius: AppRadius.all(AppRadius.radius3),
+              ),
+              child: Text(
+                gate.notes!,
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.textPrimaryLight,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
+          ],
+          if (gate.hasValidLocation) ...[
+            AppSpacing.verticalSpaceMd,
+            GateLocationMapCard(gate: gate),
           ],
         ],
       ),
@@ -489,6 +536,74 @@ class _GateBackendCard extends StatelessWidget {
       default:
         return AppColors.primary;
     }
+  }
+
+  String _formatDateTime(BuildContext context, DateTime value) {
+    final local = value.toLocal();
+    final material = MaterialLocalizations.of(context);
+    final date = material.formatMediumDate(local);
+    final time = material.formatTimeOfDay(TimeOfDay.fromDateTime(local));
+    return '$date - $time';
+  }
+}
+
+class _GateMetaChip extends StatelessWidget {
+  const _GateMetaChip({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.06),
+        borderRadius: AppRadius.all(AppRadius.radiusFull),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: AppColors.primary),
+          AppSpacing.horizontalSpaceXs,
+          Text(
+            label,
+            style: AppTypography.caption.copyWith(
+              color: AppColors.primaryDeep,
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GateSectionLabel extends StatelessWidget {
+  const _GateSectionLabel({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 15, color: AppColors.primary),
+        AppSpacing.horizontalSpaceXs,
+        Text(
+          label,
+          style: AppTypography.caption.copyWith(
+            color: AppColors.primaryDeep,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
+    );
   }
 }
 

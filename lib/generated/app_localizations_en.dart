@@ -1173,4 +1173,47 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get app_update_store_error =>
       'The app store could not be opened. Please try again.';
+
+  @override
+  String dismissalAssignmentPeriod(String start, String end) {
+    return 'From $start to $end';
+  }
+
+  @override
+  String get dismissalAssignmentPeriodUnavailable =>
+      'Assignment period unavailable';
+
+  @override
+  String get dismissalAssignmentActive => 'Active now';
+
+  @override
+  String get dismissalAssignmentUpcoming => 'Upcoming';
+
+  @override
+  String get dismissalAssignmentEnded => 'Ended';
+
+  @override
+  String get dismissalGateLocationTitle => 'Gate location';
+
+  @override
+  String dismissalGateCoordinates(String latitude, String longitude) {
+    return '$latitude, $longitude';
+  }
+
+  @override
+  String get dismissalOpenInMaps => 'Open in Maps';
+
+  @override
+  String get dismissalMapOpenError => 'The gate location could not be opened.';
+
+  @override
+  String dismissalGateOrder(num order) {
+    return 'Display order $order';
+  }
+
+  @override
+  String get dismissalGateWaitingZones => 'Waiting zones';
+
+  @override
+  String get dismissalGateNotes => 'Operational notes';
 }

@@ -449,5 +449,20 @@
   "@app_update_current_version": {"placeholders": {"version": {"type": "String"}}},
   "app_update_now": "Update now",
   "app_update_later": "Later",
-  "app_update_store_error": "The app store could not be opened. Please try again."
+  "app_update_store_error": "The app store could not be opened. Please try again.",
+  "dismissalAssignmentPeriod": "From {start} to {end}",
+  "@dismissalAssignmentPeriod": {"placeholders": {"start": {"type": "String"}, "end": {"type": "String"}}},
+  "dismissalAssignmentPeriodUnavailable": "Assignment period unavailable",
+  "dismissalAssignmentActive": "Active now",
+  "dismissalAssignmentUpcoming": "Upcoming",
+  "dismissalAssignmentEnded": "Ended",
+  "dismissalGateLocationTitle": "Gate location",
+  "dismissalGateCoordinates": "{latitude}, {longitude}",
+  "@dismissalGateCoordinates": {"placeholders": {"latitude": {"type": "String"}, "longitude": {"type": "String"}}},
+  "dismissalOpenInMaps": "Open in Maps",
+  "dismissalMapOpenError": "The gate location could not be opened.",
+  "dismissalGateOrder": "Display order {order}",
+  "@dismissalGateOrder": {"placeholders": {"order": {"type": "num"}}},
+  "dismissalGateWaitingZones": "Waiting zones",
+  "dismissalGateNotes": "Operational notes"
 }

@@ -1165,4 +1165,46 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get app_update_store_error =>
       'تعذر فتح متجر التطبيقات. حاول مرة أخرى.';
+
+  @override
+  String dismissalAssignmentPeriod(String start, String end) {
+    return 'من $start إلى $end';
+  }
+
+  @override
+  String get dismissalAssignmentPeriodUnavailable => 'فترة التكليف غير محددة';
+
+  @override
+  String get dismissalAssignmentActive => 'نشط الآن';
+
+  @override
+  String get dismissalAssignmentUpcoming => 'قادم';
+
+  @override
+  String get dismissalAssignmentEnded => 'منتهٍ';
+
+  @override
+  String get dismissalGateLocationTitle => 'موقع البوابة';
+
+  @override
+  String dismissalGateCoordinates(String latitude, String longitude) {
+    return '$latitude، $longitude';
+  }
+
+  @override
+  String get dismissalOpenInMaps => 'فتح في الخرائط';
+
+  @override
+  String get dismissalMapOpenError => 'تعذر فتح موقع البوابة.';
+
+  @override
+  String dismissalGateOrder(num order) {
+    return 'ترتيب العرض $order';
+  }
+
+  @override
+  String get dismissalGateWaitingZones => 'مناطق الانتظار';
+
+  @override
+  String get dismissalGateNotes => 'ملاحظات التشغيل';
 }
