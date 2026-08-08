@@ -75,7 +75,7 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 132,
+      width: 110,
       margin: const EdgeInsetsDirectional.only(end: AppSpacing.md),
       padding: AppSpacing.allMd,
       decoration: BoxDecoration(
@@ -101,6 +101,7 @@ class _SummaryCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: AppTypography.caption.copyWith(
               color: AppColors.textSecondaryLight,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],

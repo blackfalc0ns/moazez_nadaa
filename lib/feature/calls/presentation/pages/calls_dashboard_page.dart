@@ -112,7 +112,7 @@ class _CallsDashboardPageState extends State<CallsDashboardPage> {
                                 .where((request) => request.signals.urgent)
                                 .length,
                       ),
-                      AppSpacing.verticalSpaceXl,
+                      AppSpacing.verticalSpaceMd,
                       CallsSummaryStrip(
                         newCount: summary?.requestedCount ?? 0,
                         preparingCount:
